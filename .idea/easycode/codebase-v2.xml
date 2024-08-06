@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="com.obiscr.chatgpt.settings.EasyCodeState">
+    <option name="projectFiles" value="$PROJECT_DIR$/bot/migrations/__init__.py;D:/labs/widget_bot_pskgu/widget/bot/__init__.py;D:/labs/widget_bot_pskgu/widget/bot/admin.py;D:/labs/widget_bot_pskgu/widget/bot/apps.py;D:/labs/widget_bot_pskgu/widget/bot/models.py;D:/labs/widget_bot_pskgu/widget/bot/serializers.py;D:/labs/widget_bot_pskgu/widget/bot/tests.py;D:/labs/widget_bot_pskgu/widget/bot/views.py;D:/labs/widget_bot_pskgu/widget/nltk/intents.json;D:/labs/widget_bot_pskgu/widget/nltk/train.py;D:/labs/widget_bot_pskgu/widget/widget/__init__.py;D:/labs/widget_bot_pskgu/widget/widget/asgi.py;D:/labs/widget_bot_pskgu/widget/widget/settings.py;D:/labs/widget_bot_pskgu/widget/widget/urls.py;D:/labs/widget_bot_pskgu/widget/widget/wsgi.py;D:/labs/widget_bot_pskgu/widget/manage.py" />
+  </component>
+</project>
