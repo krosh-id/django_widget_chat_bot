@@ -74,7 +74,7 @@ class LibChatPredict(ChatPredict):
                  classes_dir: str = "D:/labs/widget_bot_pskgu/widget/modelAI/classes.pkl",
                  intents_dir: str = "D:/labs/widget_bot_pskgu/widget/modelAI/intents.json"):
         """
-        Служит для предсказания ответов на основе существующей обученной модели с пользовательскими путями.
+        Служит для предсказания ответов на основе существующей обученной модели для библиотеки.
 
         :param model_dir: путь к модели
         :param words_dir: путь к словам

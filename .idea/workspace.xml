@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bbe515d-2f69-41b6-bf38-a3bd7e57051e" name="Changes" comment="base structure project">
-      <change afterPath="$PROJECT_DIR$/.idea/easycode.ignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/easycode/codebase-v2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bot/chat_predict.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/modelAI/intents.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/modelAI/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+    <list default="true" id="3bbe515d-2f69-41b6-bf38-a3bd7e57051e" name="Changes" comment="add nltk model">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/chat_predict.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/chat_predict.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/widget/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/widget/urls.py" afterDir="false" />
     </list>
@@ -45,29 +41,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Django Server.widget.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/labs/widget_bot_pskgu/widget/nltk&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.language&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Django Server.widget.executor": "Run",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "D:/labs/widget_bot_pskgu/widget/nltk",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "configurable.group.language",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\labs\widget_bot_pskgu\widget\nltk" />
@@ -121,7 +117,12 @@
       <workItem from="1722521912282" duration="8924000" />
       <workItem from="1722592811677" duration="4062000" />
       <workItem from="1722675505609" duration="3026000" />
-      <workItem from="1722934003458" duration="5315000" />
+      <workItem from="1722934003458" duration="5478000" />
+      <workItem from="1722959560390" duration="77000" />
+      <workItem from="1722967657038" duration="7995000" />
+      <workItem from="1723368824590" duration="3654000" />
+      <workItem from="1723373248048" duration="60000" />
+      <workItem from="1723447376989" duration="8216000" />
     </task>
     <task id="LOCAL-00001" summary="base structure project">
       <option name="closed" value="true" />
@@ -131,7 +132,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722253392582</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="add nltk model">
+      <option name="closed" value="true" />
+      <created>1722939579116</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1722939579116</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -140,6 +149,15 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="base structure project" />
-    <option name="LAST_COMMIT_MESSAGE" value="base structure project" />
+    <MESSAGE value="add nltk model" />
+    <option name="LAST_COMMIT_MESSAGE" value="add nltk model" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="Python.DjangoServer">
+        <watch expression="queryset.model.questions.rel" />
+        <watch expression="queryset.model.questions.rel" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

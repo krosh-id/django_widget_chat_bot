@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from bot.views import ChatAPIView
+from bot.views import LibPageAPI
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', ChatAPIView.as_view()),
+    path('api/list_question/<int:page_id>', LibPageAPI.as_view({'get': 'retrieve'})),
+    path('api/form', LibPageAPI.as_view({'post': 'create'})),
+    path('api/predict_answer', LibPageAPI.as_view({'post': 'get_response'})),
 ]
