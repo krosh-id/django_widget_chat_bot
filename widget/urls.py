@@ -17,9 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from bot.views import LibPageAPI
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('bot.urls', namespace='bot'))
+    path('api/', include('bot.urls')),
 ]

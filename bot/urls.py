@@ -3,7 +3,7 @@ from bot.views import LibPageAPI
 
 # апи для страницы библиотеки
 extra_lib_patterns = [
-    path('list_question/<int:page_id>', LibPageAPI.as_view({'get': 'retrieve'})),
+    path('list_question/', LibPageAPI.as_view({'get': 'retrieve'})),
     path('form/', LibPageAPI.as_view({'post': 'create'})),
     path('predict_answer/', LibPageAPI.as_view({'post': 'get_response'})),
 ]

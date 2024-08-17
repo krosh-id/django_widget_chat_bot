@@ -1,7 +1,10 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
 from rest_framework import viewsets, status
+import bot.models
 from bot.chat_predict import LibChatPredict
-from bot.models import Category
+from bot.models import Category, Page
 from bot.serializers import CategorySerializer, FormQuestionSerializer
 
 
@@ -12,19 +15,27 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
         получение ответа на основе модели nltk и метода get_response
 
         :param model_chat: объект чата модели основанный на ChatPredict
+        :param page_id: айди страницы из бд к которой будет привязан чат бот
     """
     model_chat = None
+    page_id = None
 
-    def __init__(self, class_chat_predict):
+    def __init__(self, class_chat_predict, page_id: int):
         if 'get_answer' not in dir(class_chat_predict) or not class_chat_predict:
             raise ValueError('Используйте класс на основе ChatPredict')
+        try:
+            Page.objects.get(pk=page_id)
+        except bot.models.Page.DoesNotExist:
+            raise ValueError(f'Страницы с айди {page_id} не существует')
 
         self.model_chat = class_chat_predict
+        self.page_id = page_id
         super().__init__()
 
     # 2 отдельных sql запроса на категории и вопросы
-    def retrieve(self, request, page_id=None):
-        queryset = Category.objects.filter(page_id=page_id).prefetch_related('questions').all()
+    @method_decorator(cache_page(60*60), name='list_question')
+    def retrieve(self, request):
+        queryset = Category.objects.filter(page_id=self.page_id).prefetch_related('questions').all()
         serializer = CategorySerializer(queryset, many=True)
 
         return Response(serializer.data)
@@ -50,4 +61,5 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
 class LibPageAPI(BaseCategoryQuestionAPIListCreate):
     def __init__(self):
         class_chat_predict = LibChatPredict()
-        super().__init__(class_chat_predict)
+        page_id = 2
+        super().__init__(class_chat_predict, page_id)
