@@ -5,6 +5,7 @@ from django.db import models
 class Page(models.Model):
     name = models.CharField(max_length=255, null=False, verbose_name="Название страницы")
     url = models.URLField(null=False, unique=True, verbose_name="Адрес страницы")
+    slug = models.SlugField(max_length=100, unique=True)
     date_created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     class Meta:
@@ -45,7 +46,7 @@ class Question(models.Model):
                                    related_name='questions',
                                    verbose_name="Создатель вопроса")
     category = models.ForeignKey(Category,
-                                 on_delete=models.PROTECT,
+                                 on_delete=models.CASCADE,
                                  related_name='questions',
                                  verbose_name="Категория")
     is_published = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)),
@@ -67,7 +68,7 @@ class FormQuestion(models.Model):
     email = models.EmailField(verbose_name="Эл. почта", null=False)
     date_created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     text = models.CharField(max_length=500, verbose_name="Текст обращения", null=False)
-    page = models.ForeignKey(Page, on_delete=models.PROTECT, related_name='page', verbose_name="Отношение к странице")
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='page', verbose_name="Отношение к странице")
 
     class Meta:
         verbose_name = 'Обращение'
