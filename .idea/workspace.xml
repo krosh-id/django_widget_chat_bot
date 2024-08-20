@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bbe515d-2f69-41b6-bf38-a3bd7e57051e" name="Changes" comment="add dynamic admin site for widget pages">
+    <list default="true" id="3bbe515d-2f69-41b6-bf38-a3bd7e57051e" name="Changes" comment="add new ui for admin panel">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bot/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/apps.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/widget/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/widget/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,6 +149,7 @@
       <workItem from="1723989820573" duration="4458000" />
       <workItem from="1724062377111" duration="13277000" />
       <workItem from="1724138089471" duration="8828000" />
+      <workItem from="1724158384924" duration="4861000" />
     </task>
     <task id="LOCAL-00001" summary="base structure project">
       <option name="closed" value="true" />
@@ -200,7 +199,15 @@
       <option name="project" value="LOCAL" />
       <updated>1724080374336</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="add new ui for admin panel">
+      <option name="closed" value="true" />
+      <created>1724158783373</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1724158783373</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,7 +221,8 @@
     <MESSAGE value="api split. Add new urls.py for bot app" />
     <MESSAGE value="api redis cache for list question get request" />
     <MESSAGE value="add dynamic admin site for widget pages" />
-    <option name="LAST_COMMIT_MESSAGE" value="add dynamic admin site for widget pages" />
+    <MESSAGE value="add new ui for admin panel" />
+    <option name="LAST_COMMIT_MESSAGE" value="add new ui for admin panel" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib.auth.models import Group, Permission, User
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect
 from .models import Page, Category, Question, FormQuestion
 
@@ -27,6 +29,13 @@ class CustomAdminSite(admin.AdminSite):
                ] + urls
         return urls
 
+    def has_permission(self, request):
+        if request.user.is_superuser:
+            return True
+        if request.user.is_staff:
+            return request.user.has_perm(f'auth.admin_for_page_{self.page_id}')
+        return False
+
 
 # Базовые админ-классы для Category, Question и FormQuestion
 class BaseCategoryAdmin(admin.ModelAdmin):
@@ -51,6 +60,24 @@ class BaseFormQuestionAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.filter(page=self.model_admin_site.page_id)
+
+
+# Создает, если не существует, группы пользователей и разрешения для доступа к админ панелям
+def check_or_create_group_permission(pages: list):
+    print('Проверка необходимых группы и разрешений')
+    groups_name = Group.objects.all().values_list('name', flat=True)
+
+    for page in pages:
+        if not f'admin_page_{page.slug}' in groups_name:
+            admin_group = Group.objects.create(name=f'admin_page_{page.slug}')
+            content_type = ContentType.objects.get_for_model(User)
+            perm_staff = Permission.objects.create(name=f'Can login admin page {page.name}',
+                                                   codename=f'admin_for_page_{page.id}',
+                                                   content_type=content_type)
+            admin_group.permissions.add(perm_staff)
+            print(f'Группа пользователей admin_page_{page.slug} с разрешением '
+                  f'на вход admin_for_page_{page.id} была создана')
+    print('Проверка завершена')
 
 
 # Фабричная функция для создания AdminSite и регистрации моделей
