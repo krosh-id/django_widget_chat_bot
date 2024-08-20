@@ -13,7 +13,7 @@ for page in Page.objects.all():
     else:
         print(f'\033[31m Страница по адресу: {page.url} — !не отвечает! \033[0m')
 
-    admin_site = create_custom_admin_site(page.id, page.name)
+    admin_site = create_custom_admin_site(page.id, page.name, page.url)
     extra_admin_site_patterns.append(path(f'{page.slug}/', admin_site.urls))
 
 # апи для страницы библиотеки

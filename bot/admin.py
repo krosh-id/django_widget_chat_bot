@@ -1,7 +1,5 @@
 from django.contrib import admin
-from django.http import Http404
-from rest_framework.response import Response
-
+from django.shortcuts import redirect
 from .models import Page, Category, Question, FormQuestion
 
 # Главная админка
@@ -12,13 +10,22 @@ admin.site.register(Question)
 
 # Дополнительные кастомные админки
 class CustomAdminSite(admin.AdminSite):
-    def __init__(self, page_id, page_name, *args, **kwargs):
+    def __init__(self, page_id, page_name, site_url, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.page_name = page_name
         self.page_id = page_id
         self.site_header = f'Панель администрирования виджета страницы {page_name}'
         self.site_title = f'Страница Администратора виджета {page_name}'
-        self.index_title = f'Стартовая страница Администратора виджета {page_name}'
+        self.index_title = f'Управление виджетом {page_name}'
+        self.site_url = site_url
+
+    def get_urls(self):
+        from django.urls import path
+        urls = super(CustomAdminSite, self).get_urls()
+        urls = [
+                   path('site_url/', lambda request: redirect(self.site_url), name='site_url'),
+               ] + urls
+        return urls
 
 
 # Базовые админ-классы для Category, Question и FormQuestion
@@ -47,10 +54,11 @@ class BaseFormQuestionAdmin(admin.ModelAdmin):
 
 
 # Фабричная функция для создания AdminSite и регистрации моделей
-def create_custom_admin_site(page_id: int, page_name: str) -> CustomAdminSite:
+def create_custom_admin_site(page_id: int, page_name: str, site_url: str) -> CustomAdminSite:
     custom_admin = CustomAdminSite(name=f'admin_page_{page_name}',
                                    page_id=page_id,
                                    page_name=page_name,
+                                   site_url=site_url
                                    )
 
     # Определяем админ-классы, связывая их с текущим AdminSite
