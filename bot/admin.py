@@ -63,45 +63,5 @@ class BaseFormQuestionAdmin(admin.ModelAdmin):
 
 
 # Создает, если не существует, группы пользователей и разрешения для доступа к админ панелям
-def check_or_create_group_permission(pages: list):
-    print('Проверка необходимых группы и разрешений')
-    groups_name = Group.objects.all().values_list('name', flat=True)
-
-    for page in pages:
-        if not f'admin_page_{page.slug}' in groups_name:
-            admin_group = Group.objects.create(name=f'admin_page_{page.slug}')
-            content_type = ContentType.objects.get_for_model(User)
-            perm_staff = Permission.objects.create(name=f'Can login admin page {page.name}',
-                                                   codename=f'admin_for_page_{page.id}',
-                                                   content_type=content_type)
-            admin_group.permissions.add(perm_staff)
-            print(f'Группа пользователей admin_page_{page.slug} с разрешением '
-                  f'на вход admin_for_page_{page.id} была создана')
-    print('Проверка завершена')
-
-
 # Фабричная функция для создания AdminSite и регистрации моделей
-def create_custom_admin_site(page_id: int, page_name: str, site_url: str) -> CustomAdminSite:
-    custom_admin = CustomAdminSite(name=f'admin_page_{page_name}',
-                                   page_id=page_id,
-                                   page_name=page_name,
-                                   site_url=site_url
-                                   )
-
-    # Определяем админ-классы, связывая их с текущим AdminSite
-    class CategoryAdmin(BaseCategoryAdmin):
-        model_admin_site = custom_admin
-
-    class QuestionAdmin(BaseQuestionAdmin):
-        model_admin_site = custom_admin
-
-    class FormQuestionAdmin(BaseFormQuestionAdmin):
-        model_admin_site = custom_admin
-
-    # Регистрируем модели в текущем AdminSite
-    custom_admin.register(Category, CategoryAdmin)
-    custom_admin.register(Question, QuestionAdmin)
-    custom_admin.register(FormQuestion, FormQuestionAdmin)
-
-    return custom_admin
 

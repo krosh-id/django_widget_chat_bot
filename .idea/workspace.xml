@@ -4,9 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bbe515d-2f69-41b6-bf38-a3bd7e57051e" name="Changes" comment="add new ui for admin panel">
+    <list default="true" id="3bbe515d-2f69-41b6-bf38-a3bd7e57051e" name="Changes" comment="add auto create group and permission for admin panels">
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/vlad.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bot/custom_admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bot/migrations/0001_initial.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/widget.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/widget.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/migrations/0002_page_slug.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/migrations/0003_alter_formquestion_page_alter_page_slug_and_more.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/bot/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,30 +62,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Django Server.widget.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.pycharm.django.structure.promotion.once.per.project&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/labs/widget_bot_pskgu/widget/nltk&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Django Server.widget.executor": "Run",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "dev",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/labs/widget_bot_pskgu/widget",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.stylelint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.stylelint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "proofread",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\labs\widget_bot_pskgu\widget\nltk" />
@@ -95,6 +105,7 @@
         <env name="DJANGO_SETTINGS_MODULE" value="widget.settings" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.12 (widget)" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -149,7 +160,10 @@
       <workItem from="1723989820573" duration="4458000" />
       <workItem from="1724062377111" duration="13277000" />
       <workItem from="1724138089471" duration="8828000" />
-      <workItem from="1724158384924" duration="4861000" />
+      <workItem from="1724158384924" duration="5056000" />
+      <workItem from="1724169777345" duration="17000" />
+      <workItem from="1724586376977" duration="4908000" />
+      <workItem from="1724592353290" duration="3766000" />
     </task>
     <task id="LOCAL-00001" summary="base structure project">
       <option name="closed" value="true" />
@@ -207,7 +221,15 @@
       <option name="project" value="LOCAL" />
       <updated>1724158783373</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="add auto create group and permission for admin panels">
+      <option name="closed" value="true" />
+      <created>1724168848487</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1724168848487</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -222,7 +244,8 @@
     <MESSAGE value="api redis cache for list question get request" />
     <MESSAGE value="add dynamic admin site for widget pages" />
     <MESSAGE value="add new ui for admin panel" />
-    <option name="LAST_COMMIT_MESSAGE" value="add new ui for admin panel" />
+    <MESSAGE value="add auto create group and permission for admin panels" />
+    <option name="LAST_COMMIT_MESSAGE" value="add auto create group and permission for admin panels" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
