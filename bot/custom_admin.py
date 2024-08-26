@@ -15,9 +15,7 @@ class CheckCreateAdminPage:
 
     def __init__(self):
         from bot.models import Page
-        pages = Page.objects.all()
-        print('Миграция модели Page не произведена!')
-        self.pages = pages
+        self.pages = Page.objects.all()
 
     @staticmethod
     def __check_or_create_group_permission(page):
@@ -72,17 +70,19 @@ class CheckCreateAdminPage:
 
     def main(self) -> list:
         print('Проверка необходимых группы и разрешений')
-        for page in self.pages:
-            self.__check_or_create_group_permission(page)
+        try:
+            for page in self.pages:
+                self.__check_or_create_group_permission(page)
 
-            response = requests.get(str(page.url))
-            if response.status_code == 200:
-                print(f'\033[32m Страница по адресу: {page.url} — активна \033[0m')
-            else:
-                print(f'\033[31m Страница по адресу: {page.url} — !не отвечает! \033[0m')
+                response = requests.get(str(page.url))
+                if response.status_code == 200:
+                    print(f'\033[32m Страница по адресу: {page.url} — активна \033[0m')
+                else:
+                    print(f'\033[31m Страница по адресу: {page.url} — !не отвечает! \033[0m')
 
-            admin_site = self.__create_custom_admin_site(page)
-            self.extra_admin_site_patterns.append(path(f'{page.slug}/', admin_site.urls))
-
+                admin_site = self.__create_custom_admin_site(page)
+                self.extra_admin_site_patterns.append(path(f'{page.slug}/', admin_site.urls))
+        except:
+            print(f'\033[31m Миграция модели Page не произведена! \033[0m')
         print('Проверка завершена')
         return self.extra_admin_site_patterns

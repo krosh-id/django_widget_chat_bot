@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="widgetbot_db" uuid="015b7822-ee0a-4b65-b8e1-7626741d1074">
+    <data-source source="LOCAL" name="widgetbot_db" uuid="dbb77e35-76f0-4cc2-8305-0c39a42f6c1d">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>

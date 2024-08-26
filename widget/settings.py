@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'django_ratelimit.middleware.RatelimitMiddleware',
 ]
 
 ROOT_URLCONF = 'widget.urls'
@@ -93,7 +94,12 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.dummy.DummyCache",
         # "BACKEND": "django.core.cache.backends.redis.RedisCache",
         # "LOCATION": "redis://127.0.0.1:6379",
-    }
+    },
+}
+
+RATE_LIMIT = {
+    'default': '10/minute',  # Ограничение в 10 запросов в минуту
+    'user': '5/minute',     # Ограничение в 5 запросов в минуту для аутентифицированных пользователей
 }
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -135,6 +141,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 JAZZMIN_SETTINGS = {
     "site_brand": "Панель виджетов",

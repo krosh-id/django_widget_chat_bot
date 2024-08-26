@@ -1,14 +1,9 @@
-import psycopg
 from django.urls import path, include
 from bot.custom_admin import CheckCreateAdminPage
 from bot.views import LibPageAPI
 
 extra_admin_site_patterns = []
-
-try:
-    extra_admin_site_patterns.extend(CheckCreateAdminPage().main())
-except psycopg.errors.UndefinedTable:
-    print('\033 Миграция модели Page не произведена! \033[0m')
+extra_admin_site_patterns.extend(CheckCreateAdminPage().main())
 
 # апи для страницы библиотеки
 extra_lib_patterns = [

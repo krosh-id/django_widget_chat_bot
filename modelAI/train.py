@@ -1,6 +1,8 @@
 import random
 import pickle
 import json
+
+import nltk
 from nltk.tokenize import word_tokenize
 from keras.api.optimizers import SGD
 from keras.api.layers import Dense, Dropout
@@ -15,7 +17,11 @@ documents = []
 ignore_words = ["?", "!", ".", ","]
 
 # Инициализация лемматизатора pymorphy2
+
 morph = pymorphy3.MorphAnalyzer()
+nltk.download('omw-1.4')
+nltk.download('punkt_tab')
+nltk.download("wordnet")
 
 # Загрузка намерений из JSON файла
 with open("D:/labs/widget_bot_pskgu/widget/modelAI/intents.json", encoding="utf-8") as file:

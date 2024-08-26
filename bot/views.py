@@ -1,5 +1,6 @@
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django_ratelimit.decorators import ratelimit
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 import bot.models
@@ -33,13 +34,15 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
         super().__init__()
 
     # 2 отдельных sql запроса на категории и вопросы
-    @method_decorator(cache_page(60*60), name='list_question')
+    @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
+    @method_decorator(cache_page(60*60, key_prefix='category_questions_{}'.format(page_id)), name='list_question')
     def retrieve(self, request):
         queryset = Category.objects.filter(page_id=self.page_id).prefetch_related('questions').all()
         serializer = CategorySerializer(queryset, many=True)
 
         return Response(serializer.data)
 
+    @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
     def create(self, request):
         serializer = FormQuestionSerializer(data=request.data)
         if serializer.is_valid():
@@ -47,6 +50,7 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
     def get_response(self, request):
         msg = request.data.get('msg', 'пока')
         if msg.startswith(('меня зовут', 'привет, меня зовут')):
@@ -61,5 +65,5 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
 class LibPageAPI(BaseCategoryQuestionAPIListCreate):
     def __init__(self):
         class_chat_predict = LibChatPredict()
-        page_id = 2
+        page_id = 1
         super().__init__(class_chat_predict, page_id)
