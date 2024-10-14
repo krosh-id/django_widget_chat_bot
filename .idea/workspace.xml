@@ -5,12 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3bbe515d-2f69-41b6-bf38-a3bd7e57051e" name="Changes" comment="add basic limit on the number of requests to the api. &#10;fix migration check">
-      <change afterPath="$PROJECT_DIR$/bot/migrations/0001_initial.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bot/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/widget/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/widget/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modelAI/chatbot_model.keras" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/modelAI/classes.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +47,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/krosh-id/pgu_chat_bot.git&quot;,
-    &quot;accountId&quot;: &quot;dc8cb2bc-37f7-43fb-b92b-ad57004070a1&quot;
+    &quot;accountId&quot;: &quot;87efe8f6-c2a8-47c8-bf88-68d926b5072a&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -68,7 +71,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/labs/widget_bot_pskgu/widget&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/labs/веб_программирование/site&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -101,7 +104,6 @@
         <env name="DJANGO_SETTINGS_MODULE" value="widget.settings" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.12 (widget)" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -170,6 +172,24 @@
       <workItem from="1727264572710" duration="241000" />
       <workItem from="1727337600363" duration="9865000" />
       <workItem from="1727369174182" duration="1249000" />
+      <workItem from="1727384448925" duration="24000" />
+      <workItem from="1727458080426" duration="142000" />
+      <workItem from="1727622478258" duration="722000" />
+      <workItem from="1727623209993" duration="2939000" />
+      <workItem from="1727675222869" duration="706000" />
+      <workItem from="1727678260050" duration="42000" />
+      <workItem from="1727680896028" duration="3414000" />
+      <workItem from="1727684938436" duration="847000" />
+      <workItem from="1728154846520" duration="2071000" />
+      <workItem from="1728157940861" duration="2267000" />
+      <workItem from="1728300916428" duration="1465000" />
+      <workItem from="1728390377818" duration="8000" />
+      <workItem from="1728456286517" duration="3515000" />
+      <workItem from="1728474159417" duration="5000" />
+      <workItem from="1728655583106" duration="1174000" />
+      <workItem from="1728890112726" duration="218000" />
+      <workItem from="1728890471195" duration="2292000" />
+      <workItem from="1728904596044" duration="3602000" />
     </task>
     <task id="LOCAL-00001" summary="base structure project">
       <option name="closed" value="true" />
@@ -251,7 +271,15 @@
       <option name="project" value="LOCAL" />
       <updated>1724687945367</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="add basic limit on the number of requests to the api. &#10;fix migration check">
+      <option name="closed" value="true" />
+      <created>1727384462665</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1727384462665</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

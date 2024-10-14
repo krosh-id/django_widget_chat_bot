@@ -12,7 +12,7 @@ class PageSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ['id', 'text']
+        fields = ['id', 'text', 'answer']
 
 
 class CategorySerializer(serializers.ModelSerializer):

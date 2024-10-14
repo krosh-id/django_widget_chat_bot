@@ -40,15 +40,6 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
         msg = msg.strip()
         return msg
 
-    @staticmethod
-    def __get_chat_history(request):
-        return request.session.get('chat_history', [])
-
-    @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
-    def get_history(self, request):
-        # Получаем историю чата из сессии, если она существует
-        return Response(self.__get_chat_history(request))
-
     # 2 отдельных SQL запроса на категории и вопросы
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
     @method_decorator(cache_page(60 * 60, key_prefix='category_questions_{}'.format(page_id)))
@@ -79,9 +70,6 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
         # Дополнительная защита от возможных вредоносных данных
         msg = self.sanitize_message(msg)
 
-        chat_history = self.__get_chat_history(request)
-        chat_history.append({'user': msg})
-
         # Логика обработки имени
         if msg.startswith(('меня зовут', 'привет, меня зовут')):
             name = msg.split()[-1]
@@ -92,8 +80,6 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
         else:
             res = self.model_chat.get_answer(msg)
 
-        chat_history.append({'bot': res})
-        request.session['chat_history'] = chat_history
         return Response({'answer': res})
 
 

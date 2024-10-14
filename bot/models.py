@@ -41,6 +41,7 @@ class Question(models.Model):
         PUBLISHED = 1, 'Опубликовано'
 
     text = models.CharField(verbose_name="Текст вопроса")
+    answer = models.CharField(verbose_name="Ответ на вопрос")
     created_by = models.ForeignKey(get_user_model(),
                                    on_delete=models.CASCADE,
                                    related_name='questions',
