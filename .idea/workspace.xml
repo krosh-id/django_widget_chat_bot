@@ -4,16 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bbe515d-2f69-41b6-bf38-a3bd7e57051e" name="Changes" comment="add basic limit on the number of requests to the api. &#10;fix migration check">
+    <list default="true" id="3bbe515d-2f69-41b6-bf38-a3bd7e57051e" name="Changes" comment="little fix">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bot/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/custom_admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/custom_admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modelAI/chatbot_model.keras" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/modelAI/classes.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/widget/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/widget/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -189,7 +189,20 @@
       <workItem from="1728655583106" duration="1174000" />
       <workItem from="1728890112726" duration="218000" />
       <workItem from="1728890471195" duration="2292000" />
-      <workItem from="1728904596044" duration="3602000" />
+      <workItem from="1728904596044" duration="4269000" />
+      <workItem from="1729059247243" duration="2019000" />
+      <workItem from="1729586062819" duration="2725000" />
+      <workItem from="1729594328721" duration="356000" />
+      <workItem from="1729599524143" duration="6584000" />
+      <workItem from="1730048410023" duration="2859000" />
+      <workItem from="1730363135629" duration="3075000" />
+      <workItem from="1730395079908" duration="1001000" />
+      <workItem from="1730446527634" duration="3000" />
+      <workItem from="1730741765797" duration="1220000" />
+      <workItem from="1730797540407" duration="1058000" />
+      <workItem from="1731061218868" duration="2665000" />
+      <workItem from="1731498703434" duration="6033000" />
+      <workItem from="1731583347531" duration="6072000" />
     </task>
     <task id="LOCAL-00001" summary="base structure project">
       <option name="closed" value="true" />
@@ -279,7 +292,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727384462665</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="little fix">
+      <option name="closed" value="true" />
+      <created>1728915792329</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1728915792329</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -297,7 +318,8 @@
     <MESSAGE value="add auto create group and permission for admin panels" />
     <MESSAGE value="A separate class for custom admin pages. Migration notification" />
     <MESSAGE value="add basic limit on the number of requests to the api. &#10;fix migration check" />
-    <option name="LAST_COMMIT_MESSAGE" value="add basic limit on the number of requests to the api. &#10;fix migration check" />
+    <MESSAGE value="little fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="little fix" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

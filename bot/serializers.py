@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from bot.models import Page, Category, Question, FormQuestion
+from bot.models import Page, Category, Question, FormQuestion, QuestionTopicNotification
 
 
 class PageSerializer(serializers.ModelSerializer):
@@ -13,6 +13,12 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ['id', 'text', 'answer']
+
+
+class QuestionTopicNotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionTopicNotification
+        fields = ['id', 'topic']
 
 
 class CategorySerializer(serializers.ModelSerializer):

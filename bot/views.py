@@ -6,8 +6,8 @@ from django_ratelimit.decorators import ratelimit
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from bot.chat_predict import LibChatPredict
-from bot.models import Category, Page
-from bot.serializers import CategorySerializer, FormQuestionSerializer
+from bot.models import Category, Page, QuestionTopicNotification
+from bot.serializers import CategorySerializer, FormQuestionSerializer, QuestionTopicNotificationSerializer
 
 
 class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
@@ -50,7 +50,6 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
         return Response(serializer.data)
 
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
-    @csrf_protect
     def create(self, request):
         serializer = FormQuestionSerializer(data=request.data)
         if serializer.is_valid():
@@ -81,6 +80,14 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
             res = self.model_chat.get_answer(msg)
 
         return Response({'answer': res})
+
+    @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
+    @method_decorator(cache_page(60 * 60, key_prefix='category_questions_{}'.format(page_id)))
+    def get_question_topic(self, request):
+        queryset = QuestionTopicNotification.objects.all()
+        serializer = QuestionTopicNotificationSerializer(queryset, many=True)
+
+        return Response(serializer.data)
 
 
 class LibPageAPI(BaseCategoryQuestionAPIListCreate):

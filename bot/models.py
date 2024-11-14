@@ -63,13 +63,29 @@ class Question(models.Model):
         return self.text
 
 
+class QuestionTopicNotification(models.Model):
+    topic = models.CharField(max_length=55, verbose_name="Тема обращения", null=False)
+    send_to_email = models.EmailField(max_length=100, verbose_name="Почта для уведомлений")
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='question_topics',
+                             verbose_name="Отношение к странице")
+
+    class Meta:
+        verbose_name = 'Тема обращения'
+        verbose_name_plural = 'Темы обращения'
+
+    def __str__(self):
+        return self.topic
+
+
 class FormQuestion(models.Model):
     full_name = models.CharField(max_length=255, verbose_name="Полное имя", null=False)
     mobile_phone = models.CharField(max_length=55, verbose_name="Номер телефона", null=True)
     email = models.EmailField(verbose_name="Эл. почта", null=False)
     date_created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     text = models.CharField(max_length=500, verbose_name="Текст обращения", null=False)
-    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='page', verbose_name="Отношение к странице")
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='form_questions', verbose_name="Отношение к странице")
+    topic_question = models.ForeignKey(QuestionTopicNotification,
+                                       related_name='question_topic_notifications', on_delete=models.CASCADE, )
 
     class Meta:
         verbose_name = 'Обращение'

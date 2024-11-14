@@ -2,8 +2,9 @@ import requests
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Group, Permission, User
 from django.urls import path
-from bot.admin import CustomAdminSite, BaseCategoryAdmin, BaseQuestionAdmin, BaseFormQuestionAdmin
-from bot.models import Category, Question, FormQuestion
+from bot.admin import CustomAdminSite, BaseCategoryAdmin, BaseQuestionAdmin, BaseFormQuestionAdmin, \
+    BaseQuestionTopicNotificationAdmin
+from bot.models import Category, Question, FormQuestion, QuestionTopicNotification
 
 
 class CheckCreateAdminPage:
@@ -26,13 +27,21 @@ class CheckCreateAdminPage:
         """
         print('Проверка необходимых группы и разрешений')
         groups_name = Group.objects.all().values_list('name', flat=True)
+
         if not f'admin_page_{page.slug}' in groups_name:
+            list_model = [Question, Category, FormQuestion]
             admin_group = Group.objects.create(name=f'admin_page_{page.slug}')
             content_type = ContentType.objects.get_for_model(User)
             perm_staff = Permission.objects.create(name=f'Can login admin page {page.name}',
                                                    codename=f'admin_for_page_{page.id}',
                                                    content_type=content_type)
             admin_group.permissions.add(perm_staff)
+            # добавление сторонних разрешений для существующих моделей
+            for model in list_model:
+                content_type = ContentType.objects.get_for_model(model)
+                permissions = Permission.objects.filter(content_type=content_type)
+                for perm in permissions:
+                    admin_group.permissions.add(perm)
             print(f'Группа пользователей admin_page_{page.slug} с разрешением '
                   f'на вход admin_for_page_{page.id} была создана')
         print('Проверка завершена')
@@ -61,10 +70,14 @@ class CheckCreateAdminPage:
         class FormQuestionAdmin(BaseFormQuestionAdmin):
             model_admin_site = custom_admin
 
+        class QuestionTopicNotificationAdmin(BaseQuestionTopicNotificationAdmin):
+            model_admin_site = custom_admin
+
         # Регистрируем модели в текущем AdminSite
         custom_admin.register(Category, CategoryAdmin)
         custom_admin.register(Question, QuestionAdmin)
         custom_admin.register(FormQuestion, FormQuestionAdmin)
+        custom_admin.register(QuestionTopicNotification, QuestionTopicNotificationAdmin)
 
         return custom_admin
 

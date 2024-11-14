@@ -1,13 +1,13 @@
 from django.contrib import admin
-from django.contrib.auth.models import Group, Permission, User
-from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect
-from .models import Page, Category, Question, FormQuestion
+from .models import Page, Category, Question, FormQuestion, QuestionTopicNotification
 
 # Главная админка
 admin.site.register(Page)
 admin.site.register(Category)
 admin.site.register(Question)
+admin.site.register(QuestionTopicNotification)
+admin.site.register(FormQuestion)
 
 
 # Дополнительные кастомные админки
@@ -61,6 +61,13 @@ class BaseFormQuestionAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request)
         return qs.filter(page=self.model_admin_site.page_id)
 
+
+class BaseQuestionTopicNotificationAdmin(admin.ModelAdmin):
+    list_display = ('topic', 'send_to_email', 'page')
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(page=self.model_admin_site.page_id)
 
 # Создает, если не существует, группы пользователей и разрешения для доступа к админ панелям
 # Фабричная функция для создания AdminSite и регистрации моделей
