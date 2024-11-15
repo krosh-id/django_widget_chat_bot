@@ -51,7 +51,8 @@ class Question(models.Model):
                                  related_name='questions',
                                  verbose_name="Категория")
     is_published = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)),
-                                       default=Status.PUBLISHED)
+                                       default=Status.PUBLISHED,
+                                       verbose_name="Статус")
     date_created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_modified = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
 
@@ -83,14 +84,19 @@ class FormQuestion(models.Model):
     email = models.EmailField(verbose_name="Эл. почта", null=False)
     date_created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     text = models.CharField(max_length=500, verbose_name="Текст обращения", null=False)
-    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='form_questions', verbose_name="Отношение к странице")
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='form_questions',
+                             verbose_name="Отношение к странице")
     topic_question = models.ForeignKey(QuestionTopicNotification,
-                                       related_name='question_topic_notifications', on_delete=models.CASCADE, )
+                                       related_name='question_topic_notifications',
+                                       on_delete=models.CASCADE,
+                                       verbose_name="Тема обращения",
+                                       )
 
     class Meta:
         verbose_name = 'Обращение'
         verbose_name_plural = 'Обращения'
         ordering = ['-date_created']
+        default_permissions = ('view',)
 
     def __str__(self):
         return self.email + ': ' + self.full_name + str(self.date_created)

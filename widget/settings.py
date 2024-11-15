@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+from decouple import config
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -90,19 +91,19 @@ WSGI_APPLICATION = 'widget.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'widgetbot_db',
-        'USER': 'widgetbot',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
+        'NAME': config('DATABASE_NAME'),
+        'USER': config('DATABASE_USER'),
+        'PASSWORD': config('DATABASE_PASSWORD'),
+        'HOST': config('DATABASE_HOST'),
         'PORT': 5432,
     }
 }
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-        # "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-        # "LOCATION": "cache_table_bot",
+        # "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "cache_table_bot",
         # "BACKEND": "django.core.cache.backends.redis.RedisCache",
         # "LOCATION": "redis://127.0.0.1:6379",
     },
@@ -154,7 +155,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5500",
+    config('ALLOWED_HOSTS'),
 ]
 
 # Разрешить конкретные заголовки
@@ -163,6 +164,13 @@ CORS_ALLOW_HEADERS = [
     'cache-control',
     'expires',
 ]
+
+# почтовый сервер для рассылки уведомлений
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 JAZZMIN_SETTINGS = {
     "site_brand": "Панель виджетов",

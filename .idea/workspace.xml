@@ -4,14 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bbe515d-2f69-41b6-bf38-a3bd7e57051e" name="Changes" comment="little fix">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+    <list default="true" id="3bbe515d-2f69-41b6-bf38-a3bd7e57051e" name="Changes" comment="form questions">
+      <change afterPath="$PROJECT_DIR$/bot/migrations/0003_questiontopicnotification_page_and_more.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/widget/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/widget.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/widget.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bot/custom_admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/custom_admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bot/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bot/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/widget/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/widget/settings.py" afterDir="false" />
     </list>
@@ -91,6 +90,9 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\labs\widget_bot_pskgu\widget\nltk" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\labs\widget_bot_pskgu\widget\widget" />
     </key>
   </component>
   <component name="RunManager">
@@ -202,7 +204,9 @@
       <workItem from="1730797540407" duration="1058000" />
       <workItem from="1731061218868" duration="2665000" />
       <workItem from="1731498703434" duration="6033000" />
-      <workItem from="1731583347531" duration="6072000" />
+      <workItem from="1731583347531" duration="10232000" />
+      <workItem from="1731671497599" duration="4690000" />
+      <workItem from="1731676350878" duration="2213000" />
     </task>
     <task id="LOCAL-00001" summary="base structure project">
       <option name="closed" value="true" />
@@ -300,7 +304,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728915792329</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="form questions">
+      <option name="closed" value="true" />
+      <created>1731604702815</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1731604702815</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -319,7 +331,8 @@
     <MESSAGE value="A separate class for custom admin pages. Migration notification" />
     <MESSAGE value="add basic limit on the number of requests to the api. &#10;fix migration check" />
     <MESSAGE value="little fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="little fix" />
+    <MESSAGE value="form questions" />
+    <option name="LAST_COMMIT_MESSAGE" value="form questions" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

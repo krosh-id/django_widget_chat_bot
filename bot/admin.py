@@ -2,9 +2,19 @@ from django.contrib import admin
 from django.shortcuts import redirect
 from .models import Page, Category, Question, FormQuestion, QuestionTopicNotification
 
+
+class CategoryAdmin(admin.ModelAdmin):
+    exclude = ('created_by',)
+    list_display = ('name', 'created_by', 'page')
+    def save_model(self, request, obj, form, change):
+        if not obj.created_by_id:  # Если поле author еще не заполнено
+            obj.created_by = request.user
+        super().save_model(request, obj, form, change)
+
+
 # Главная админка
 admin.site.register(Page)
-admin.site.register(Category)
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Question)
 admin.site.register(QuestionTopicNotification)
 admin.site.register(FormQuestion)
@@ -39,19 +49,31 @@ class CustomAdminSite(admin.AdminSite):
 
 # Базовые админ-классы для Category, Question и FormQuestion
 class BaseCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'page', 'created_by')
+    list_display = ('name', 'created_by')
+    exclude = ('created_by', 'page')
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.filter(page=self.model_admin_site.page_id)
 
+    def save_model(self, request, obj, form, change):
+        if not obj.created_by_id:  # Если поле author еще не заполнено
+            obj.created_by = request.user
+        super().save_model(request, obj, form, change)
+
 
 class BaseQuestionAdmin(admin.ModelAdmin):
     list_display = ('text', 'category', 'is_published', 'created_by')
+    exclude = ('created_by',)
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.filter(category__page=self.model_admin_site.page_id)
+
+    def save_model(self, request, obj, form, change):
+        if not obj.created_by_id:  # Если поле author еще не заполнено
+            obj.created_by = request.user
+        super().save_model(request, obj, form, change)
 
 
 class BaseFormQuestionAdmin(admin.ModelAdmin):
