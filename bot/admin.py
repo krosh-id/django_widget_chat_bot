@@ -6,6 +6,7 @@ from .models import Page, Category, Question, FormQuestion, QuestionTopicNotific
 class CategoryAdmin(admin.ModelAdmin):
     exclude = ('created_by',)
     list_display = ('name', 'created_by', 'page')
+
     def save_model(self, request, obj, form, change):
         if not obj.created_by_id:  # Если поле author еще не заполнено
             obj.created_by = request.user
