@@ -15,6 +15,7 @@
 
 * [Быстрый старт](rukovodstvo-razrobotchika/bystryi-start.md)
 
-## Group 1
+## История версий
 
-* [История версий](group-1/istoriya-versii.md)
+* [Текущая версия](istoriya-versii/tekushaya-versiya.md)
+* [Архив](istoriya-versii/arkhiv.md)
