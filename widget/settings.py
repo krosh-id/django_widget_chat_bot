@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l6d!w1$prn0ut%(yo^(!@vl5g7)zc%s=jsk03jib+boa-)kiz&'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [config('ALLOWED_HOSTS')]
 
 
 # Application definition
@@ -186,7 +186,7 @@ JAZZMIN_SETTINGS = {
         {"name": "Открыть сайт", "url": "admin:site_url", "new_window": True},
 
         # external url that opens in a new window (Permissions can be added)
-        {"name": "Поддержка", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+        {"name": "Поддержка", "url": "https://vladislav-pavlovich.gitbook.io/django-widget-chat-bot", "new_window": True},
 
         # model admin to link to (Permissions checked against model)
         {"model": "auth.User", "permissions": ["auth.view_user"]},
