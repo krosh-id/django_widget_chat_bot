@@ -2,14 +2,14 @@
 
 * [О проекте](README.md)
 
-## Руководство пользователей
+## Руководство пользователя
 
-* [Начало работы](rukovodstvo-polzovatelei/nachalo-raboty.md)
-* [Главная страница](rukovodstvo-polzovatelei/glavnaya-stranica.md)
-* [Категории](rukovodstvo-polzovatelei/kategorii.md)
-* [Вопросы](rukovodstvo-polzovatelei/voprosy.md)
-* [Обращения](rukovodstvo-polzovatelei/obrasheniya.md)
-* [Темы обращений](rukovodstvo-polzovatelei/temy-obrashenii.md)
+* [Начало работы](rukovodstvo-polzovatelya/nachalo-raboty.md)
+* [Главная страница](rukovodstvo-polzovatelya/glavnaya-stranica.md)
+* [Категории](rukovodstvo-polzovatelya/kategorii.md)
+* [Вопросы](rukovodstvo-polzovatelya/voprosy.md)
+* [Обращения](rukovodstvo-polzovatelya/obrasheniya.md)
+* [Темы обращений](rukovodstvo-polzovatelya/temy-obrashenii.md)
 
 ## Руководство разроботчика
 
