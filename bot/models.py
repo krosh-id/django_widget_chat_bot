@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-
+from ckeditor.fields import RichTextField
 
 class Page(models.Model):
     name = models.CharField(max_length=255, null=False, verbose_name="Название страницы")
@@ -41,7 +41,7 @@ class Question(models.Model):
         PUBLISHED = 1, 'Опубликовано'
 
     text = models.CharField(verbose_name="Текст вопроса")
-    answer = models.CharField(verbose_name="Ответ на вопрос")
+    answer = RichTextField(verbose_name="Ответ на вопрос")
     created_by = models.ForeignKey(get_user_model(),
                                    on_delete=models.CASCADE,
                                    related_name='questions',

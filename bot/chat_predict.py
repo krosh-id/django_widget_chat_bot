@@ -3,13 +3,13 @@ import random
 import numpy as np
 import pickle
 import nltk
-from keras.api.models import load_model
+from keras.api.keras.models import load_model
 import pymorphy3
 
 
 class ChatPredict:
 
-    def __init__(self,
+    def __init__(self,  # Исправлено: __init__ вместо init
                  model_dir: str,
                  words_dir: str,
                  classes_dir: str,
@@ -31,12 +31,12 @@ class ChatPredict:
         # Инициализация лемматизатора pymorphy2
         self.morph = pymorphy3.MorphAnalyzer()
 
-    def __clean_up_sentence(self, sentence):
+    def clean_up_sentence(self, sentence):
         sentence_words = nltk.word_tokenize(sentence, language='russian')
         return [self.morph.parse(word.lower())[0].normal_form for word in sentence_words]
 
     def __bow(self, sentence, words, show_details=False):
-        sentence_words = self.__clean_up_sentence(sentence)
+        sentence_words = self.clean_up_sentence(sentence) # Исправлено: self.clean_up_sentence
         bag = [0] * len(words)
         for s in sentence_words:
             for i, w in enumerate(words):
@@ -53,13 +53,16 @@ class ChatPredict:
         error_threshold = 0.25
         results = [[i, r] for i, r in enumerate(res) if r > error_threshold]
         results.sort(key=lambda x: x[1], reverse=True)
-        return [{"intent": self.classes[r[0]], "probability": str(r[1])} for r in results]
+        return results # Возвращаем results, даже если он пустой
 
     def __get_response(self, ints):
-        tag = ints[0]["intent"]
+        if not ints:  # Проверка на пустой список
+            return "Извини, я тебя не понимаю." # Добавлено сообщение об ошибке
+        tag = ints[0][0] # Исправлено: индекс 0 для получения тега
         for i in self.intents["intents"]:
-            if i["tag"] == tag:
+            if i["tag"] == self.classes[tag]: # Исправлено: используется self.classes[tag]
                 return random.choice(i["responses"])
+        return "Извини, я не знаю ответа на этот вопрос." # Добавлено сообщение об отсутствии ответа
 
     def get_answer(self, msg):
         ints = self.__predict_class(msg, self.model)
@@ -69,10 +72,10 @@ class ChatPredict:
 
 class LibChatPredict(ChatPredict):
     def __init__(self,
-                 model_dir: str = "D:/labs/widget_bot_pskgu/widget/modelAI/chatbot_model.keras",
-                 words_dir: str = "D:/labs/widget_bot_pskgu/widget/modelAI/words.pkl",
-                 classes_dir: str = "D:/labs/widget_bot_pskgu/widget/modelAI/classes.pkl",
-                 intents_dir: str = "D:/labs/widget_bot_pskgu/widget/modelAI/intents.json"):
+                 model_dir: str = "D:/labs/django_widget_chat_bot/modelAI/chatbot_model.keras",
+                 words_dir: str = "D:/labs/django_widget_chat_bot/modelAI/words.pkl",
+                 classes_dir: str = "D:/labs/django_widget_chat_bot/modelAI/classes.pkl",
+                 intents_dir: str = "D:/labs/django_widget_chat_bot/modelAI/intents.json"):
         """
         Служит для предсказания ответов на основе существующей обученной модели для библиотеки.
 
@@ -82,4 +85,4 @@ class LibChatPredict(ChatPredict):
         :param intents_dir: путь к намерениям
         """
 
-        super().__init__(model_dir, words_dir, classes_dir, intents_dir)
+        super().__init__(model_dir, words_dir, classes_dir, intents_dir) # Исправлено: __init__

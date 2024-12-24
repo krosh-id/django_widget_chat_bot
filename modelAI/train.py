@@ -4,9 +4,9 @@ import json
 
 import nltk
 from nltk.tokenize import word_tokenize
-from keras.api.optimizers import SGD
-from keras.api.layers import Dense, Dropout
-from keras.api.models import Sequential
+from keras.api.keras.optimizers import SGD
+from keras.api.keras.layers import Dense, Dropout
+from keras.api.keras.models import Sequential
 import numpy as np
 import pymorphy3
 
@@ -24,7 +24,7 @@ nltk.download('punkt_tab')
 nltk.download("wordnet")
 
 # Загрузка намерений из JSON файла
-with open("D:/labs/widget_bot_pskgu/widget/modelAI/intents.json", encoding="utf-8") as file:
+with open("D:/labs/django_widget_chat_bot/modelAI/intents.json", encoding="utf-8") as file:
     intents = json.load(file)
 
 # Обработка данных
