@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'ckeditor',
     'django_bleach',
+    'django_jsonform',
 ]
 
 MIDDLEWARE = [
@@ -105,8 +106,6 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.dummy.DummyCache",
         # "BACKEND": "django.core.cache.backends.db.DatabaseCache",
         # "LOCATION": "cache_table_bot",
-        # "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        # "LOCATION": "redis://127.0.0.1:6379",
     },
 }
 
@@ -165,6 +164,7 @@ CORS_ALLOW_HEADERS = [
     'content-type',
     'cache-control',
     'expires',
+    'X-CSRFToken',
 ]
 
 # почтовый сервер для рассылки уведомлений

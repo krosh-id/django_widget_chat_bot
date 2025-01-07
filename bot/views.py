@@ -59,25 +59,25 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
         if serializer.is_valid():
             serializer.save()
             notification = QuestionTopicNotification.objects.get(pk=serializer.data['topic_question'])
-            send_mail(
-                f"Новый вопрос по теме {notification.topic}",
-                f"""
-                    Появился новый вопрос на странице {self.page_url}.
-                    Содержание вопроса:
-                        "{serializer.data['text']}"
-                    От: {serializer.data['full_name']} {serializer.data['email']}
-                    
-                    Вы получили это письмо так как подписаны на рассылку уведомлений. 
-                    Не нужно отвечать на это письмо!
-                """,
-                "widgetbot@yandex.ru",
-                [notification.send_to_email],
-                fail_silently=False,
-            )
+            for email in notification.send_to_email:
+                send_mail(
+                    f"Новый вопрос по теме {notification.topic}",
+                    f"""
+                        Появился новый вопрос на странице {self.page_url}.
+                        Содержание вопроса:
+                            "{serializer.data['text']}"
+                        От: {serializer.data['full_name']} {serializer.data['email']}
+                        
+                        Вы получили это письмо так как подписаны на рассылку уведомлений. 
+                        Не нужно отвечать на это письмо!
+                    """,
+                    "widgetbot@yandex.ru",
+                    [email],
+                    fail_silently=False,
+                )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @method_decorator(csrf_exempt, name='dispatch')
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
     #@csrf_protect
     def get_response(self, request):
