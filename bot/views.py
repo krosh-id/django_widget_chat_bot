@@ -82,7 +82,7 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
     #@csrf_protect
     def get_response(self, request):
         # Безопасно получаем и валидируем сообщение
-        msg = request.data.get('msg', 'пока')
+        msg = request.data.get('msg')
 
         if not isinstance(msg, str) or len(msg) > 1000:
             return Response({'error': 'Некорректное сообщение'}, status=status.HTTP_400_BAD_REQUEST)

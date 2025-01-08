@@ -9,7 +9,7 @@ import pymorphy3
 
 class ChatPredict:
 
-    def __init__(self,  # Исправлено: __init__ вместо init
+    def __init__(self,
                  model_dir: str,
                  words_dir: str,
                  classes_dir: str,
@@ -36,7 +36,7 @@ class ChatPredict:
         return [self.morph.parse(word.lower())[0].normal_form for word in sentence_words]
 
     def __bow(self, sentence, words, show_details=False):
-        sentence_words = self.clean_up_sentence(sentence) # Исправлено: self.clean_up_sentence
+        sentence_words = self.clean_up_sentence(sentence)
         bag = [0] * len(words)
         for s in sentence_words:
             for i, w in enumerate(words):
@@ -50,19 +50,21 @@ class ChatPredict:
         p = self.__bow(sentence, self.words, show_details=False)
         p = np.array([p])
         res = model.predict(p, verbose=0)[0]
-        error_threshold = 0.25
+        print("Predictions:", res)
+        error_threshold = 0.7  # порог уверенности
         results = [[i, r] for i, r in enumerate(res) if r > error_threshold]
         results.sort(key=lambda x: x[1], reverse=True)
-        return results # Возвращаем results, даже если он пустой
+        # Если нет уверенных предсказаний, возвращаем пустой список
+        return results if results else None
 
     def __get_response(self, ints):
-        if not ints:  # Проверка на пустой список
-            return "Извини, я тебя не понимаю." # Добавлено сообщение об ошибке
-        tag = ints[0][0] # Исправлено: индекс 0 для получения тега
-        for i in self.intents["intents"]:
-            if i["tag"] == self.classes[tag]: # Исправлено: используется self.classes[tag]
-                return random.choice(i["responses"])
-        return "Извини, я не знаю ответа на этот вопрос." # Добавлено сообщение об отсутствии ответа
+        if not ints:  # Если результат классификации пустой
+            return "Обратитесь к разделу вопросы."
+        tag = ints[0][0]  # Получаем тег (индекс)
+        for intent in self.intents["intents"]:
+            if intent["tag"] == self.classes[tag]:
+                return random.choice(intent["responses"])
+        return "Обратитесь к разделу вопросы."
 
     def get_answer(self, msg):
         ints = self.__predict_class(msg, self.model)
@@ -85,4 +87,4 @@ class LibChatPredict(ChatPredict):
         :param intents_dir: путь к намерениям
         """
 
-        super().__init__(model_dir, words_dir, classes_dir, intents_dir) # Исправлено: __init__
+        super().__init__(model_dir, words_dir, classes_dir, intents_dir)
