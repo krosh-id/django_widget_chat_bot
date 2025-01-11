@@ -1,15 +1,16 @@
 import re
-from django.utils.decorators import method_decorator
+from django.utils.decorators import method_decorator, decorator_from_middleware
 from django.views.decorators.cache import cache_page
-from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django_ratelimit.decorators import ratelimit
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from bot.chat_predict import LibChatPredict
 from bot.models import Category, Page, QuestionTopicNotification
+from bot.request_log.middleware import RequestLogMiddleware
 from bot.serializers import CategorySerializer, FormQuestionSerializer, QuestionTopicNotificationSerializer
 
+request_log = decorator_from_middleware(RequestLogMiddleware)
 
 class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
     """
@@ -79,6 +80,7 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
+    @request_log
     #@csrf_protect
     def get_response(self, request):
         # Безопасно получаем и валидируем сообщение

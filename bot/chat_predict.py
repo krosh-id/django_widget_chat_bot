@@ -3,6 +3,7 @@ import random
 import numpy as np
 import pickle
 import nltk
+import structlog
 from keras.api.keras.models import load_model
 import pymorphy3
 
@@ -50,7 +51,12 @@ class ChatPredict:
         p = self.__bow(sentence, self.words, show_details=False)
         p = np.array([p])
         res = model.predict(p, verbose=0)[0]
-        print("Predictions:", res)
+        #print("Predictions:", res)
+        log_note = {
+            "Predictions": res,
+        }
+        logger = structlog.get_logger()
+        logger.info("Predictions log", **log_note)
         error_threshold = 0.7  # порог уверенности
         results = [[i, r] for i, r in enumerate(res) if r > error_threshold]
         results.sort(key=lambda x: x[1], reverse=True)
