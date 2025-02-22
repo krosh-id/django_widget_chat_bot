@@ -10,9 +10,8 @@ from keras.layers import Dense, Dropout, BatchNormalization
 from keras.models import Sequential
 import numpy as np
 import pymorphy3
-from sklearn.model_selection import train_test_split, KFold
+from sklearn.model_selection import KFold
 from sklearn.metrics import classification_report
-from sklearn.utils import shuffle
 
 # Инициализация переменных
 words = []

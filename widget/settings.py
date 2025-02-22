@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bot.apps.BotConfig',
     'rest_framework',
+    'social_integration',
     'corsheaders',
     'ckeditor',
     'django_bleach',
@@ -103,9 +104,9 @@ DATABASES = {
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-        # "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-        # "LOCATION": "cache_table_bot",
+        #"BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "cache_table_bot",
     },
 }
 

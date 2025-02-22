@@ -107,9 +107,8 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
     @method_decorator(cache_page(60 * 60, key_prefix='category_questions_{}'.format(page_id)))
     def get_question_topic(self, request):
-        queryset = QuestionTopicNotification.objects.all()
+        queryset = QuestionTopicNotification.objects.filter(page_id=self.page).all()
         serializer = QuestionTopicNotificationSerializer(queryset, many=True)
-
         return Response(serializer.data)
 
 
