@@ -2,8 +2,10 @@
 from django.core.cache import cache
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from bot.models import Category, QuestionTopicNotification
-from bot.serializers import CategorySerializer, QuestionTopicNotificationSerializer
+from bot.serializers import CategorySerializer, QuestionTopicNotificationSerializer, FormQuestionSerializer
+from bot.views import BaseCategoryQuestionAPIListCreate
 import re
+CLEANR = re.compile('<.*?>')
 
 class VkMethod:
     page = 1
@@ -85,21 +87,25 @@ class VkMethod:
                 return
             case 'отправить':
                 user_data = cache.get(f'user_data_{user_id}')
+                user_data['page'] = self.page
                 if not user_data or len(user_data) < 3:
                     self.send_msg(user_id, 'Анкета заполнена не полностью! Заполните все поля.')
                     return
-                # base_url = settings.BASE_API_URL
-                # # Отправляем данные в DRF API через запрос
-                # api_url = settings.BASE_API_URL + reverse('form-question-create')  # Генерация URL для API
-                # response = requests.post(api_url, json=user_data)
-                #
-                # if response.status_code == 201:
-                #     self.send_msg(user_id, 'Ваше обращение успешно отправлено. Ожидайте ответа.')
-                #     cache.delete(f'user_data_{user_id}')
-                #     cache.delete(f'user_step_{user_id}')
-                #     self.send_main_menu(user_id)
-                # else:
-                #     self.send_msg(user_id, 'Ошибка при отправке анкеты. Попробуйте позже.')
+                user_data['topic_question'] = QuestionTopicNotification.objects.filter(page_id=self.page).get(topic=user_data['topic_question']).id
+                serializer = FormQuestionSerializer(data=user_data)
+
+                if serializer.is_valid():
+                    serializer.save()
+                    BaseCategoryQuestionAPIListCreate.send_notifications_by_email(serializer.data, "vk.com")
+                    self.send_msg(user_id, 'Ваше обращение успешно отправлено. Ожидайте ответа.')
+                    cache.delete(f'user_data_{user_id}')
+                    cache.delete(f'user_step_{user_id}')
+                    self.send_main_menu(user_id)
+                else:
+                    self.send_msg(user_id, 'Ошибка при отправке анкеты. Попробуйте позже.')
+                    cache.delete(f'user_data_{user_id}')
+                    cache.delete(f'user_step_{user_id}')
+                    self.send_main_menu(user_id)
                 return
 
         step = cache.get_or_set(f'user_step_{user_id}', 0)
@@ -148,10 +154,13 @@ class VkMethod:
             case 5:
                 for category in self.category_notification:
                     if msg == category['topic']:
-                        user_data['category'] = msg  # Сохраняем категорию обращения
+                        user_data['topic_question'] = msg  # Сохраняем категорию обращения
                         cache.set(f'user_data_{user_id}', user_data)
+                        text = ''
+                        for key in user_data.keys():
+                            text += user_data[key] + '\n'
                         self.send_msg_keyboard(user_id, self.keyboard_FORM,
-                                               f'Проверьте ваши данные: {user_data}')
+                                               f'Проверьте ваши данные: {text}')
                         break
                 else:
                     self.send_msg(user_id, 'Выберите категорию обращения с помощью кнопок')

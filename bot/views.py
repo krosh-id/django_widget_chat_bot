@@ -36,13 +36,34 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
         super().__init__()
 
     @staticmethod
-    def sanitize_message(msg):
+    def __sanitize_message(msg):
         """Очистка сообщения от опасного содержимого."""
         # Убираем потенциально опасные теги
         msg = re.sub(r'<[^>]*>', '', msg)
         # Убираем лишние пробелы
         msg = msg.strip()
         return msg
+
+    @staticmethod
+    def send_notifications_by_email(data: dict, page_url: str):
+        notification = QuestionTopicNotification.objects.get(pk=data['topic_question'])
+        for email in notification.send_to_email:
+            send_mail(
+                f"Новый вопрос по теме {notification.topic}",
+                f"""
+                                Появился новый вопрос на странице {page_url}.
+                                Содержание вопроса:
+                                    "{data['text']}"
+                                От: {data['full_name']} {data['email']}
+
+                                Вы получили это письмо так как подписаны на рассылку уведомлений. 
+                                Не нужно отвечать на это письмо!
+                            """,
+                "widgetbot@yandex.ru",
+                [email],
+                fail_silently=False,
+            )
+
 
     # 2 отдельных SQL запроса на категории и вопросы
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
@@ -59,23 +80,7 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
 
         if serializer.is_valid():
             serializer.save()
-            notification = QuestionTopicNotification.objects.get(pk=serializer.data['topic_question'])
-            for email in notification.send_to_email:
-                send_mail(
-                    f"Новый вопрос по теме {notification.topic}",
-                    f"""
-                        Появился новый вопрос на странице {self.page_url}.
-                        Содержание вопроса:
-                            "{serializer.data['text']}"
-                        От: {serializer.data['full_name']} {serializer.data['email']}
-                        
-                        Вы получили это письмо так как подписаны на рассылку уведомлений. 
-                        Не нужно отвечать на это письмо!
-                    """,
-                    "widgetbot@yandex.ru",
-                    [email],
-                    fail_silently=False,
-                )
+            self.send_notifications_by_email(serializer.data, self.page_url)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -90,7 +95,7 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
             return Response({'error': 'Некорректное сообщение'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Дополнительная защита от возможных вредоносных данных
-        msg = self.sanitize_message(msg)
+        msg = self.__sanitize_message(msg)
 
         # Логика обработки имени
         if msg.startswith(('меня зовут', 'привет, меня зовут')):
