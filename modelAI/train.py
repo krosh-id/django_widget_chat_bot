@@ -21,11 +21,12 @@ ignore_words = ["?", "!", ".", ","]
 
 # Инициализация лемматизатора pymorphy3
 morph = pymorphy3.MorphAnalyzer()
+nltk.download('punkt_tab')
 nltk.download('punkt')
 nltk.download("wordnet")
 
 # Загрузка намерений из JSON файла
-with open("D:/labs/django_widget_chat_bot/modelAI/intents.json", encoding="utf-8") as file:
+with open("D:/labs/diplom/django_widget_chat_bot/modelAI/intents.json", encoding="utf-8") as file:
     intents = json.load(file)
 
 # Обработка данных

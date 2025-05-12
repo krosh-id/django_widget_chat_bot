@@ -1,5 +1,6 @@
 # Handlers for logic of processing social media messages
 from django.core.cache import cache
+from bs4 import BeautifulSoup
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from bot.models import Category, QuestionTopicNotification
 from bot.serializers import CategorySerializer, QuestionTopicNotificationSerializer, FormQuestionSerializer
@@ -38,10 +39,34 @@ class VkMethod:
     keyboard_CANCEL = VkKeyboard(one_time=False)
     keyboard_CANCEL.add_button('Отмена')
 
-
-
     def __init__(self, vk_session):
         self.vk = vk_session.get_api()
+
+    def __lists_and_paragraphs_to_text(self, html):
+        soup = BeautifulSoup(html, "html.parser")
+
+        # Обработка абзацев
+        for p in soup.find_all('p'):
+            p.insert_before("\n")
+            p.insert_after("\n")
+
+        # Обработка маркированных списков
+        for ul in soup.find_all('ul'):
+            items = [li.get_text() for li in ul.find_all('li')]
+            ul.replace_with("\n".join(items) + "\n")
+
+        # Обработка нумерованных списков
+        for ol in soup.find_all('ol'):
+            items = [f"{i + 1}. {li.get_text()}" for i, li in enumerate(ol.find_all('li'))]
+            ol.replace_with("\n".join(items) + "\n")
+
+        # Обработка ссылок
+        for a in soup.find_all('a'):
+            link_text = a.get_text()
+            href = a.get('href')
+            a.replace_with(f"{link_text}({href})")
+
+        return soup.get_text()
 
     # !add cache
     def get_questions(self) -> list[dict]:
@@ -153,10 +178,10 @@ class VkMethod:
                     self.send_msg(user_id, 'Сообщение слишком длинное, напиши короче')
             case 5:
                 for category in self.category_notification:
-                    if msg == category['topic']:
-                        user_data['topic_question'] = msg  # Сохраняем категорию обращения
+                    if msg == category['topic'].lower():
+                        user_data['topic_question'] = category['topic']  # Сохраняем категорию обращения
                         cache.set(f'user_data_{user_id}', user_data)
-                        text = ''
+                        text = '\n'
                         for key in user_data.keys():
                             text += user_data[key] + '\n'
                         self.send_msg_keyboard(user_id, self.keyboard_FORM,
@@ -177,7 +202,9 @@ class VkMethod:
             text += 'ᅠ ᅠ ᅠ ᅠ 📝' + category['name'] + '📝' + '\n'
             for question in category['questions']:
                 text += f'{i}) '+ question['text'] + '\n'
-                self.answers[i] = question['answer']
+                answer_db = question['answer']
+                if '<' in answer_db:
+                    self.answers[i] = self.__lists_and_paragraphs_to_text(answer_db)
                 i += 1
 
         self.send_msg_keyboard(user_id, self.keyboard_MENU, text)

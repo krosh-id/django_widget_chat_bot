@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import QuerySet
 from django.shortcuts import redirect
 from .models import Page, Category, Question, FormQuestion, QuestionTopicNotification
 
@@ -54,6 +55,7 @@ class BaseCategoryAdmin(admin.ModelAdmin):
     exclude = ('created_by', 'page')
 
     def get_queryset(self, request):
+
         qs = super().get_queryset(request)
         return qs.filter(page=self.model_admin_site.page_id)
 

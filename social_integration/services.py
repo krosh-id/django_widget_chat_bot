@@ -1,17 +1,18 @@
-# listeners of social networks events
+from decouple import config
 from django.core.cache import cache
 import vk_api
 from vk_api.longpoll import VkLongPoll, VkEventType
 from social_integration.handlers import VkMethod
 
-vk_session = vk_api.VkApi(token='vk1.a.4TQ9oQ9O4RAJOg-LVz9AkF_2MW4wqFT6psKbrsrfksn342Ct39az8jdMnlz8wei2B5zUoAxfK_YfKEKSiZUKQucVxGda1xC7l2Eis6SED1Tqw-4HzHdPizHxAxD6LZ3LLHSvlXYk64tEhob0NSQC42qvgZeE0CG1gEIRNj8xhceywlpWNP5jYS-AtNQVzp31M1C9y3vw0UuYl4-PmBb4Ng')
+vk_session = vk_api.VkApi(token=config('VK_TOKEN'))
 vk = vk_session.get_api()
 longpoll = VkLongPoll(vk_session)
 
+# listeners of social networks events
 def start_vk_listeners():
-    '''
+    """
         Подключение к VK API и постоянное ожидание событий
-    '''
+    """
     print("Cлушатель событий VK запущен!")
     vk_methods = VkMethod(vk_session)
     for event in longpoll.listen():
