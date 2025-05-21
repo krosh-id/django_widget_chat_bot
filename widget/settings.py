@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ['DEBUG']
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = [os.environ['ALLOWED_HOSTS']]
+ALLOWED_HOSTS = [config('ALLOWED_HOSTS'), '127.0.0.1']
 
 
 # Application definition
@@ -40,9 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bot.apps.BotConfig',
+    'chatterbot_model.apps.ChatterbotModelConfig',
     'rest_framework',
+    'social_integration',
     'corsheaders',
-
+    'ckeditor',
+    'django_bleach',
+    'django_jsonform',
 ]
 
 MIDDLEWARE = [
@@ -91,21 +95,19 @@ WSGI_APPLICATION = 'widget.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['DATABASE_NAME'],
-        'USER': os.environ['DATABASE_USER'],
-        'PASSWORD': os.environ['DATABASE_PASSWORD'],
-        'HOST': os.environ['DATABASE_HOST'],
-        'PORT': os.environ['DATABASE_PORT'],
+        'NAME': config('DATABASE_NAME'),
+        'USER': config('DATABASE_USER'),
+        'PASSWORD': config('DATABASE_PASSWORD'),
+        'HOST': config('DATABASE_HOST'),
+        'PORT': 5432,
     }
 }
 
 CACHES = {
     "default": {
-        # "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        #"BACKEND": "django.core.cache.backends.dummy.DummyCache",
         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
         "LOCATION": "cache_table_bot",
-        # "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        # "LOCATION": "redis://127.0.0.1:6379",
     },
 }
 
@@ -155,22 +157,59 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
-    os.environ['ALLOWED_HOSTS'],
+    f'http://{config("ALLOWED_HOSTS")}',
+    'http://127.0.0.1'
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Разрешить конкретные заголовки
 CORS_ALLOW_HEADERS = [
     'content-type',
     'cache-control',
     'expires',
+    'X-CSRFToken',
 ]
 
 # почтовый сервер для рассылки уведомлений
-EMAIL_HOST = os.environ['EMAIL_HOST']
-EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
-EMAIL_PORT = os.environ['EMAIL_PORT']
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+# набор инструментов редактирования
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter',
+             'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source']
+        ]
+    }
+}
+CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
+
+# Which HTML tags are allowed
+BLEACH_ALLOWED_TAGS = ['p', 'b', 'i', 'u', 'em', 'strong', 'a']
+
+# Which HTML attributes are allowed
+BLEACH_ALLOWED_ATTRIBUTES = ['href', 'title', 'style']
+
+# Which CSS properties are allowed in 'style' attributes (assuming
+# style is an allowed attribute)
+BLEACH_ALLOWED_STYLES = [
+    'font-family', 'font-weight', 'text-decoration', 'font-variant']
+
+# Strip unknown tags if True, replace with HTML escaped characters if
+# False
+BLEACH_STRIP_TAGS = True
+
+# Strip comments, or leave them in.
+BLEACH_STRIP_COMMENTS = False
 
 JAZZMIN_SETTINGS = {
     "site_brand": "Панель виджетов",
