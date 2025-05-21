@@ -1,15 +1,16 @@
 import re
-from django.utils.decorators import method_decorator
+from django.utils.decorators import method_decorator, decorator_from_middleware
 from django.views.decorators.cache import cache_page
-from django.views.decorators.csrf import csrf_protect
 from django.core.mail import send_mail
 from django_ratelimit.decorators import ratelimit
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from bot.chat_predict import LibChatPredict
 from bot.models import Category, Page, QuestionTopicNotification
+from bot.request_log.middleware import RequestLogMiddleware
 from bot.serializers import CategorySerializer, FormQuestionSerializer, QuestionTopicNotificationSerializer
 
+request_log = decorator_from_middleware(RequestLogMiddleware)
 
 class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
     """
@@ -35,13 +36,34 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
         super().__init__()
 
     @staticmethod
-    def sanitize_message(msg):
+    def __sanitize_message(msg):
         """Очистка сообщения от опасного содержимого."""
         # Убираем потенциально опасные теги
         msg = re.sub(r'<[^>]*>', '', msg)
         # Убираем лишние пробелы
         msg = msg.strip()
         return msg
+
+    @staticmethod
+    def send_notifications_by_email(data: dict, page_url: str):
+        notification = QuestionTopicNotification.objects.get(pk=data['topic_question'])
+        for email in notification.send_to_email:
+            send_mail(
+                f"Новый вопрос по теме {notification.topic}",
+                f"""
+                                Появился новый вопрос на странице {page_url}.
+                                Содержание вопроса:
+                                    "{data['text']}"
+                                От: {data['full_name']} {data['email']}
+
+                                Вы получили это письмо так как подписаны на рассылку уведомлений. 
+                                Не нужно отвечать на это письмо!
+                            """,
+                "widgetbot@yandex.ru",
+                [email],
+                fail_silently=False,
+            )
+
 
     # 2 отдельных SQL запроса на категории и вопросы
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
@@ -58,36 +80,22 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
 
         if serializer.is_valid():
             serializer.save()
-            notification = QuestionTopicNotification.objects.get(pk=serializer.data['topic_question'])
-            send_mail(
-                f"Новый вопрос по теме {notification.topic}",
-                f"""
-                    Появился новый вопрос на странице {self.page_url}.
-                    Содержание вопроса:
-                        "{serializer.data['text']}"
-                    От: {serializer.data['full_name']} {serializer.data['email']}
-                    
-                    Вы получили это письмо так как подписаны на рассылку уведомлений. 
-                    Не нужно отвечать на это письмо!
-                """,
-                "admin-lib-pgu@example.com",
-                [notification.send_to_email],
-                fail_silently=False,
-            )
+            self.send_notifications_by_email(serializer.data, self.page_url)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
+    @request_log
     #@csrf_protect
     def get_response(self, request):
         # Безопасно получаем и валидируем сообщение
-        msg = request.data.get('msg', 'пока')
+        msg = request.data.get('msg')
 
         if not isinstance(msg, str) or len(msg) > 1000:
             return Response({'error': 'Некорректное сообщение'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Дополнительная защита от возможных вредоносных данных
-        msg = self.sanitize_message(msg)
+        msg = self.__sanitize_message(msg)
 
         # Логика обработки имени
         if msg.startswith(('меня зовут', 'привет, меня зовут')):
@@ -104,10 +112,10 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
     @method_decorator(cache_page(60 * 60, key_prefix='category_questions_{}'.format(page_id)))
     def get_question_topic(self, request):
-        queryset = QuestionTopicNotification.objects.all()
+        queryset = QuestionTopicNotification.objects.filter(page_id=self.page_id).all()
         serializer = QuestionTopicNotificationSerializer(queryset, many=True)
-
         return Response(serializer.data)
+
 
 
 class LibPageAPI(BaseCategoryQuestionAPIListCreate):

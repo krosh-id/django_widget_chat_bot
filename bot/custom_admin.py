@@ -29,7 +29,7 @@ class CheckCreateAdminPage:
         groups_name = Group.objects.all().values_list('name', flat=True)
 
         if not f'admin_page_{page.slug}' in groups_name:
-            list_model = [Question, Category, FormQuestion]
+            list_model = [Question, Category, FormQuestion, QuestionTopicNotification]
             admin_group = Group.objects.create(name=f'admin_page_{page.slug}')
             content_type = ContentType.objects.get_for_model(User)
             perm_staff = Permission.objects.create(name=f'Can login admin page {page.name}',

@@ -3,12 +3,15 @@ import pickle
 import json
 
 import nltk
+from keras.optimizer_v2.gradient_descent import SGD
 from nltk.tokenize import word_tokenize
-from keras.api.optimizers import SGD
-from keras.api.layers import Dense, Dropout
-from keras.api.models import Sequential
+
+from keras.layers import Dense, Dropout, BatchNormalization
+from keras.models import Sequential
 import numpy as np
 import pymorphy3
+from sklearn.model_selection import KFold
+from sklearn.metrics import classification_report
 
 # Инициализация переменных
 words = []
@@ -16,15 +19,14 @@ classes = []
 documents = []
 ignore_words = ["?", "!", ".", ","]
 
-# Инициализация лемматизатора pymorphy2
-
+# Инициализация лемматизатора pymorphy3
 morph = pymorphy3.MorphAnalyzer()
-nltk.download('omw-1.4')
 nltk.download('punkt_tab')
+nltk.download('punkt')
 nltk.download("wordnet")
 
 # Загрузка намерений из JSON файла
-with open("D:/labs/widget_bot_pskgu/widget/modelAI/intents.json", encoding="utf-8") as file:
+with open("D:/labs/diplom/django_widget_chat_bot/modelAI/intents.json", encoding="utf-8") as file:
     intents = json.load(file)
 
 # Обработка данных
@@ -44,7 +46,7 @@ classes = sorted(list(set(classes)))
 
 print(len(documents), "documents")
 print(len(classes), "classes", classes)
-print(len(words), "unique lemmatized words", words)
+print(len(words), "unique lemmatized words")
 
 # Сохранение слов и классов в pickle файлы
 pickle.dump(words, open("words.pkl", "wb"))
@@ -57,8 +59,7 @@ for doc in documents:
     bag = []
     pattern_words = doc[0]
     pattern_words = [morph.parse(word.lower())[0].normal_form for word in pattern_words]
-    for w in words:
-        bag.append(1) if w in pattern_words else bag.append(0)
+    bag = [1 if w in pattern_words else 0 for w in words]
     output_row = list(output_empty)
     output_row[classes.index(doc[1])] = 1
     training.append([bag, output_row])
@@ -68,13 +69,20 @@ random.shuffle(training)
 train_x = np.array([item[0] for item in training])
 train_y = np.array([item[1] for item in training])
 
-print("Training data created")
+# Кросс-валидация: 5 фолдов
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
 
-# Создание модели
+# Массив для хранения результатов
+accuracy_per_fold = []
+classification_reports = []
+
+# Создаем модель вне цикла
 model = Sequential()
-model.add(Dense(128, input_shape=(len(train_x[0]),), activation="relu"))
+model.add(Dense(256, input_shape=(len(train_x[0]),), activation="relu"))
+model.add(BatchNormalization())  # Улучшение устойчивости
 model.add(Dropout(0.5))
-model.add(Dense(64, activation="relu"))
+model.add(Dense(128, activation="relu"))
+model.add(BatchNormalization())
 model.add(Dropout(0.5))
 model.add(Dense(len(train_y[0]), activation="softmax"))
 model.summary()
@@ -83,7 +91,37 @@ model.summary()
 sgd = SGD(learning_rate=0.01, momentum=0.9, nesterov=True)
 model.compile(loss="categorical_crossentropy", optimizer=sgd, metrics=["accuracy"])
 
-# Обучение и сохранение модели
-hist = model.fit(train_x, train_y, epochs=200, batch_size=5, verbose=1)
-model.save("chatbot_model.keras", hist)
+for fold, (train_index, val_index) in enumerate(kf.split(train_x)):
+    print(f"\nProcessing fold {fold + 1}...")
+
+    # Разделение данных на текущую обучающую и валидационную выборки
+    X_train, X_val = train_x[train_index], train_x[val_index]
+    y_train, y_val = train_y[train_index], train_y[val_index]
+
+    # Обучение модели
+    hist = model.fit(X_train, y_train, epochs=100, batch_size=8, verbose=1, validation_data=(X_val, y_val))
+
+    # Оценка модели
+    y_pred = model.predict(X_val, batch_size=8)  # Оптимизация с батчами
+    y_pred_classes = np.argmax(y_pred, axis=1)
+    y_val_classes = np.argmax(y_val, axis=1)
+
+    # Получаем метрики
+    accuracy = np.mean(y_pred_classes == y_val_classes)
+    accuracy_per_fold.append(accuracy)
+
+    # Получаем отчёт по F1, Precision, Recall и другие метрики
+    labels = list(range(len(classes)))  # Метки от 0 до количества классов
+    report = classification_report(y_val_classes, y_pred_classes, zero_division=1, target_names=classes, labels=labels)
+    classification_reports.append(report)
+
+    print(f"Fold {fold + 1} - Accuracy: {accuracy:.4f}")
+    print(f"Fold {fold + 1} - Classification Report:\n {report}")
+
+# Рассчитываем среднюю точность по всем фолдам
+average_accuracy = np.mean(accuracy_per_fold)
+print(f"\nAverage Accuracy across all folds: {average_accuracy:.4f}")
+
+# Сохранение модели (последней модели из последнего фолда)
+model.save("chatbot_model.keras")
 print("Model created")

@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-
+from django_jsonform.models.fields import ArrayField
+from ckeditor.fields import RichTextField
 
 class Page(models.Model):
     name = models.CharField(max_length=255, null=False, verbose_name="Название страницы")
@@ -41,7 +42,7 @@ class Question(models.Model):
         PUBLISHED = 1, 'Опубликовано'
 
     text = models.CharField(verbose_name="Текст вопроса")
-    answer = models.CharField(verbose_name="Ответ на вопрос")
+    answer = RichTextField(verbose_name="Ответ на вопрос")
     created_by = models.ForeignKey(get_user_model(),
                                    on_delete=models.CASCADE,
                                    related_name='questions',
@@ -66,7 +67,10 @@ class Question(models.Model):
 
 class QuestionTopicNotification(models.Model):
     topic = models.CharField(max_length=55, verbose_name="Тема обращения", null=False)
-    send_to_email = models.EmailField(max_length=100, verbose_name="Почта для уведомлений")
+    send_to_email = ArrayField(
+        models.EmailField(max_length=100, verbose_name="Почта для уведомлений"),
+        size=8
+    )
     page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='question_topics',
                              verbose_name="Отношение к странице")
 
