@@ -100,8 +100,18 @@ DATABASES = {
         'PASSWORD': config('DATABASE_PASSWORD'),
         'HOST': config('DATABASE_HOST'),
         'PORT': 5432,
+    },
+    'chatbot': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'model_chatbot_db',
+        'USER': 'chatbot_user',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': 5432,
     }
 }
+
+DATABASE_ROUTERS = ['chatterbot_model.db_routers.ChatBotRouter']
 
 CACHES = {
     "default": {

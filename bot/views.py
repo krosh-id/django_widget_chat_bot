@@ -5,10 +5,10 @@ from django.core.mail import send_mail
 from django_ratelimit.decorators import ratelimit
 from rest_framework.response import Response
 from rest_framework import viewsets, status
-from bot.chat_predict import LibChatPredict
 from bot.models import Category, Page, QuestionTopicNotification
 from bot.request_log.middleware import RequestLogMiddleware
 from bot.serializers import CategorySerializer, FormQuestionSerializer, QuestionTopicNotificationSerializer
+from chatterbot_model.models_chat import LibraryBotModel
 
 request_log = decorator_from_middleware(RequestLogMiddleware)
 
@@ -22,15 +22,15 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
     page_id = None
     page_url = None
 
-    def __init__(self, class_chat_predict, page_id: int):
-        if 'get_answer' not in dir(class_chat_predict) or not class_chat_predict:
+    def __init__(self, class_chatbot_model, page_id: int):
+        if 'get_answer' not in dir(class_chatbot_model) or not class_chatbot_model:
             raise ValueError('Используйте класс на основе ChatPredict')
         try:
             page = Page.objects.get(pk=page_id)
         except Page.DoesNotExist:
             raise ValueError(f'Страницы с айди {page_id} не существует')
 
-        self.model_chat = class_chat_predict
+        self.model_chat = class_chatbot_model
         self.page_id = page_id
         self.page_url = page.url
         super().__init__()
@@ -85,7 +85,6 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
-    @request_log
     #@csrf_protect
     def get_response(self, request):
         # Безопасно получаем и валидируем сообщение
@@ -120,6 +119,4 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
 
 class LibPageAPI(BaseCategoryQuestionAPIListCreate):
     def __init__(self):
-        class_chat_predict = LibChatPredict()
-        page_id = 1
-        super().__init__(class_chat_predict, page_id)
+        super().__init__(class_chatbot_model=LibraryBotModel.get_instance(), page_id=1)
