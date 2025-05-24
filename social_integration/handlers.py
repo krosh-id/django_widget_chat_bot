@@ -4,11 +4,12 @@ from bs4 import BeautifulSoup
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from bot.models import Category, QuestionTopicNotification
 from bot.serializers import CategorySerializer, QuestionTopicNotificationSerializer, FormQuestionSerializer
-from bot.views import BaseCategoryQuestionAPIListCreate
+from bot.views import BaseCategoryQuestionAPIListCreate, LibPageAPI
 import re
 CLEANR = re.compile('<.*?>')
 
 class VkMethod:
+    # vk привязан к странице библиотеки
     page = 1
     vk = None
     answers = {}

@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'widget.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+DATABASE_ROUTERS = ['chatterbot_model.db_routers.ChatterBotRouter']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -111,7 +111,7 @@ DATABASES = {
     }
 }
 
-DATABASE_ROUTERS = ['chatterbot_model.db_routers.ChatBotRouter']
+
 
 CACHES = {
     "default": {

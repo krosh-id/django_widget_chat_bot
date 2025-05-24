@@ -1,29 +1,26 @@
-class ChatBotRouter:
+class ChatterBotRouter:
     """
-    Роутер для модели бота: все операции с моделями из chatterbot_model пойдут в model_chat_db
+    Маршрутизатор для направления запросов приложения chatterbot_model к базе данных chatbot.
     """
-
-    route_app_labels = {'chatterbot_model'}
+    app_label = 'chatterbot_model'
+    db_name = 'chatbot'
 
     def db_for_read(self, model, **hints):
-        if model._meta.app_label in self.route_app_labels:
-            return 'chatbot'
+        if model._meta.app_label == self.app_label:
+            return self.db_name
         return None
 
     def db_for_write(self, model, **hints):
-        if model._meta.app_label in self.route_app_labels:
-            return 'chatbot'
+        if model._meta.app_label == self.app_label:
+            return self.db_name
         return None
 
     def allow_relation(self, obj1, obj2, **hints):
-        if (
-            obj1._meta.app_label in self.route_app_labels or
-            obj2._meta.app_label in self.route_app_labels
-        ):
+        if obj1._meta.app_label == self.app_label or obj2._meta.app_label == self.app_label:
             return True
         return None
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
-        if app_label in self.route_app_labels:
-            return db == 'chatbot'
+        if app_label == self.app_label:
+            return db == self.db_name
         return None
