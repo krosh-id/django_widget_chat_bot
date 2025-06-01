@@ -9,7 +9,9 @@ from bot.models import Category, Page, QuestionTopicNotification
 from bot.request_log.middleware import RequestLogMiddleware
 from bot.serializers import CategorySerializer, FormQuestionSerializer, QuestionTopicNotificationSerializer
 from chatterbot_model.models_chat import LibraryBotModel
+import logging
 
+logger = logging.getLogger('bot')
 request_log = decorator_from_middleware(RequestLogMiddleware)
 
 class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
@@ -46,23 +48,27 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
 
     @staticmethod
     def send_notifications_by_email(data: dict, page_url: str):
-        notification = QuestionTopicNotification.objects.get(pk=data['topic_question'])
-        for email in notification.send_to_email:
-            send_mail(
-                f"Новый вопрос по теме {notification.topic}",
-                f"""
-                                Появился новый вопрос на странице {page_url}.
-                                Содержание вопроса:
-                                    "{data['text']}"
-                                От: {data['full_name']} {data['email']}
-
-                                Вы получили это письмо так как подписаны на рассылку уведомлений. 
-                                Не нужно отвечать на это письмо!
-                            """,
-                "widgetbot@yandex.ru",
-                [email],
-                fail_silently=False,
-            )
+        try:
+            notification = QuestionTopicNotification.objects.get(pk=data['topic_question'])
+            for email in notification.send_to_email:
+                send_mail(
+                    f"Новый вопрос по теме {notification.topic}",
+                    f"""
+                                    Появился новый вопрос на странице {page_url}.
+                                    Содержание вопроса:
+                                        "{data['text']}"
+                                    От: {data['full_name']} {data['email']}
+    
+                                    Вы получили это письмо так как подписаны на рассылку уведомлений. 
+                                    Не нужно отвечать на это письмо!
+                                """,
+                    "widgetbot@yandex.ru",
+                    [email],
+                    fail_silently=False,
+                )
+        except Exception as e:
+            logger.error(f"Exception in send_by_email: {str(e)}", exc_info=True)
+            return Response({'error': 'Error send by email'}, status=status.HTTP_400_BAD_REQUEST)
 
 
     # 2 отдельных SQL запроса на категории и вопросы
@@ -76,13 +82,18 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
 
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
     def create(self, request):
-        serializer = FormQuestionSerializer(data=request.data)
+        try:
+            serializer = FormQuestionSerializer(data=request.data)
 
-        if serializer.is_valid():
-            serializer.save()
-            self.send_notifications_by_email(serializer.data, self.page_url)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            if serializer.is_valid():
+                serializer.save()
+                self.send_notifications_by_email(serializer.data, self.page_url)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(f"Exception in create form: {str(e)}", exc_info=True)
+            return Response({'error': 'Error create form'}, status=status.HTTP_400_BAD_REQUEST)
+
 
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
     #@csrf_protect
@@ -120,3 +131,4 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
 class LibPageAPI(BaseCategoryQuestionAPIListCreate):
     def __init__(self):
         super().__init__(class_chatbot_model=LibraryBotModel.get_instance(), page_id=1)
+

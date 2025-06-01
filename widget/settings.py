@@ -244,3 +244,64 @@ JAZZMIN_SETTINGS = {
         {"app": "books"},
     ],
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] {levelname} {name} {module} {message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': './widget/bot.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+        },
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.server',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console', 'mail_admins'],
+            'level': 'INFO',  # INFO для django, чтобы не перегружать лог
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['file', 'console', 'mail_admins'],
+            'level': 'ERROR',  # Логировать ошибки 4xx и 5xx
+            'propagate': False,
+        },
+        'django.db.backends': {
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',  # Оставляем DEBUG для операций с БД
+            'propagate': False,
+        },
+        'bot': {  # Логгер для приложения bot
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',  # DEBUG для детальных логов приложения bot
+            'propagate': False,
+        },
+    },
+}

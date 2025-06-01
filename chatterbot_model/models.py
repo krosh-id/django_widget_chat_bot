@@ -24,7 +24,7 @@ class Statement(models.Model):
     search_text = models.TextField(default="", null=False)
     conversation = models.CharField(max_length=32, default="", null=False, verbose_name="Тег")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
-    in_response_to = models.TextField(verbose_name="Ответ на: ")
+    in_response_to = models.TextField(verbose_name="Ответ на: ", blank=True, null=True)
     search_in_response_to = models.TextField(default="", null=False)
     persona = models.CharField(max_length=32, default="", null=False, verbose_name="Персона")
 
