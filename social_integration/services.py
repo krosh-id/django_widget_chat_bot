@@ -7,6 +7,7 @@ from social_integration.handlers import VkMethod
 vk_session = vk_api.VkApi(token=config('VK_TOKEN'))
 vk = vk_session.get_api()
 longpoll = VkLongPoll(vk_session)
+limit_message = 50 # лимит сообщения пользователя за 5 минут
 
 # listeners of social networks events
 def start_vk_listeners():
@@ -20,6 +21,17 @@ def start_vk_listeners():
             if event.to_me:
                 msg = event.text.lower().strip()
                 id = event.user_id
+                requests = cache.get(f'user_request_{id}')
+                if requests and requests >= limit_message:
+                   vk_methods.send_msg(id, 'От вас поступило слишком много сообщений( \n Попробуйте написать позже.')
+                   break
+                elif requests and requests < limit_message:
+                    requests += 1
+                    cache.set(f'user_request_{id}', requests, timeout=300)
+                else:
+                    requests = 1
+                    cache.set(f'user_request_{id}', requests, timeout=300)
+
                 if cache.get(f'user_step_{id}'):
                     vk_methods.send_form(id, msg)
                 else:

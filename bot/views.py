@@ -6,13 +6,11 @@ from django_ratelimit.decorators import ratelimit
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from bot.models import Category, Page, QuestionTopicNotification
-from bot.request_log.middleware import RequestLogMiddleware
 from bot.serializers import CategorySerializer, FormQuestionSerializer, QuestionTopicNotificationSerializer
 from chatterbot_model.models_chat import LibraryBotModel
 import logging
 
 logger = logging.getLogger('bot')
-request_log = decorator_from_middleware(RequestLogMiddleware)
 
 class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
     """
@@ -80,7 +78,7 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
 
         return Response(serializer.data)
 
-    @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
+    @method_decorator(ratelimit(key='user_or_ip', rate='5/m'))
     def create(self, request):
         try:
             serializer = FormQuestionSerializer(data=request.data)

@@ -1,3 +1,7 @@
+# Декоратор request_log = decorator_from_middleware(RequestLogMiddleware)
+# который позволяет логирует запросы эндпоинтов
+# используется как @request_log перед методом views.py
+
 import logging
 import time
 import structlog
