@@ -25,12 +25,13 @@ class CustomAdminSite(admin.AdminSite):
         self.index_title = f'Управление виджетом {page_name}'
         self.site_url = site_url
 
+    def site_redirect_view(self, request):
+        return redirect(self.site_url)
+
     def get_urls(self):
         from django.urls import path
-        urls = super(CustomAdminSite, self).get_urls()
-        urls = [
-                   path('site_url/', lambda request: redirect(self.site_url), name='site_url'),
-               ] + urls
+        urls = super().get_urls()
+        urls = [path('site_url/', self.site_redirect_view, name='site_url')] + urls
         return urls
 
     def has_permission(self, request):
@@ -50,7 +51,7 @@ class BaseCategoryAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if self.model_admin_site:
-            return qs.filter(category__page=self.model_admin_site.page_id)
+            return qs.filter(page=self.model_admin_site.page_id)
         return qs
 
     def save_model(self, request, obj, form, change):
@@ -137,7 +138,7 @@ class BaseFormQuestionAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if self.model_admin_site:
-            return qs.filter(category__page=self.model_admin_site.page_id)
+            return qs.filter(page=self.model_admin_site.page_id)
         return qs
 
 
@@ -148,7 +149,7 @@ class BaseQuestionTopicNotificationAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if self.model_admin_site:
-            return qs.filter(category__page=self.model_admin_site.page_id)
+            return qs.filter(page=self.model_admin_site.page_id)
         return qs
 
 # Создает, если не существует, группы пользователей и разрешения для доступа к админ панелям

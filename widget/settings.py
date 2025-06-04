@@ -238,10 +238,10 @@ JAZZMIN_SETTINGS = {
         {"name": "Поддержка", "url": "https://vladislav-pavlovich.gitbook.io/django-widget-chat-bot", "new_window": True},
 
         # model admin to link to (Permissions checked against model)
-        {"model": "auth.User", "permissions": ["auth.view_user"]},
+        #{"model": "auth.User", "permissions": ["auth.view_user"]},
 
         # App with dropdown menu to all its models pages (Permissions checked against models)
-        {"app": "books"},
+        # {"app": "bot"},
     ],
 }
 
