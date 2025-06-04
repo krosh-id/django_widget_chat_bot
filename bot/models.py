@@ -52,6 +52,7 @@ class Question(models.Model):
                                  related_name='questions',
                                  verbose_name="Категория")
     #tag_id = models.IntegerField(verbose_name='Тег (ID)', default=58)
+    order = models.SmallIntegerField(verbose_name="Порядок отображения", null=False, default=0)
     is_published = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)),
                                        default=Status.PUBLISHED,
                                        verbose_name="Статус")
@@ -61,6 +62,7 @@ class Question(models.Model):
     class Meta:
         verbose_name = 'Вопрос'
         verbose_name_plural = 'Вопросы'
+        ordering = ['order', '-date_created']
 
     def __str__(self):
         return self.text
@@ -88,7 +90,7 @@ class FormQuestion(models.Model):
     mobile_phone = models.CharField(max_length=55, verbose_name="Номер телефона", null=True)
     email = models.EmailField(verbose_name="Эл. почта", null=False)
     date_created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
-    text = models.CharField(max_length=500, verbose_name="Текст обращения", null=False)
+    text = models.CharField(max_length=500, verbose_name="Текст обращений", null=False)
     page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='form_questions',
                              verbose_name="Отношение к странице")
     topic_question = models.ForeignKey(QuestionTopicNotification,

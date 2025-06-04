@@ -92,7 +92,8 @@ class BaseCategoryAdmin(admin.ModelAdmin):
 class BaseQuestionAdmin(admin.ModelAdmin):
     # form = QuestionAdminForm
     model_admin_site = None # CustomAdminSite()
-    list_display = ('text', 'category', 'is_published', )
+    list_display = ('text', 'category', 'is_published', 'order')
+    list_editable = ('order',)
     exclude = ('created_by', )
     actions = ['reset_model']
 
