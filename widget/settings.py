@@ -262,7 +262,7 @@ LOGGING = {
     },
     'handlers': {
         'file': {
-            'level': 'DEBUG',
+            'level': 'WARNING',
             'class': 'logging.FileHandler',
             'filename': './widget/bot.log',
             'formatter': 'verbose',
@@ -295,12 +295,12 @@ LOGGING = {
         },
         'django.db.backends': {
             'handlers': ['file', 'console'],
-            'level': 'DEBUG',  # Оставляем DEBUG для операций с БД
+            'level': 'DEBUG',
             'propagate': False,
         },
         'bot': {  # Логгер для приложения bot
             'handlers': ['file', 'console'],
-            'level': 'DEBUG',  # DEBUG для детальных логов приложения bot
+            'level': 'WARNING',
             'propagate': False,
         },
     },

@@ -117,4 +117,4 @@ class TrainingPairAdmin(admin.ModelAdmin):
         except Exception as e:
             self.message_user(request, f"Ошибка при сбросе и переобучении модели: {e}", level='error')
 
-    reset_model.short_description = "Сбросить и переобучить модель из JSON"
+    reset_model.short_description = "Переобучить модель из JSON"

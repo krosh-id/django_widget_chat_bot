@@ -51,6 +51,7 @@ class Question(models.Model):
                                  on_delete=models.CASCADE,
                                  related_name='questions',
                                  verbose_name="Категория")
+    #tag_id = models.IntegerField(verbose_name='Тег (ID)', default=58)
     is_published = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)),
                                        default=Status.PUBLISHED,
                                        verbose_name="Статус")

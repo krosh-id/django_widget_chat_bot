@@ -1,6 +1,6 @@
 from django.contrib import admin
-from django.db.models import QuerySet
 from django.shortcuts import redirect
+from chatterbot_model.models_chat import LibraryBotModel
 from .models import Page, Category, Question, FormQuestion, QuestionTopicNotification
 
 
@@ -12,14 +12,6 @@ class CategoryAdmin(admin.ModelAdmin):
         if not obj.created_by_id:  # Если поле author еще не заполнено
             obj.created_by = request.user
         super().save_model(request, obj, form, change)
-
-
-# Главная админка
-admin.site.register(Page)
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Question)
-admin.site.register(QuestionTopicNotification)
-admin.site.register(FormQuestion)
 
 
 # Дополнительные кастомные админки
@@ -51,49 +43,118 @@ class CustomAdminSite(admin.AdminSite):
 
 # Базовые админ-классы для Category, Question и FormQuestion
 class BaseCategoryAdmin(admin.ModelAdmin):
+    model_admin_site = None  # CustomAdminSite()
     list_display = ('name', 'created_by')
     exclude = ('created_by', 'page')
 
     def get_queryset(self, request):
-
         qs = super().get_queryset(request)
-        return qs.filter(page=self.model_admin_site.page_id)
+        if self.model_admin_site:
+            return qs.filter(category__page=self.model_admin_site.page_id)
+        return qs
 
     def save_model(self, request, obj, form, change):
         if not obj.created_by_id:  # Если поле author еще не заполнено
             obj.created_by = request.user
         super().save_model(request, obj, form, change)
 
+# Выбор тегов для вопросов на основе tag_id
+# class QuestionAdminForm(forms.ModelForm):
+#     tag = forms.ModelChoiceField(
+#         queryset=Tag.objects.using('chatbot').all(),
+#         required=False,
+#         label='Тег',
+#         initial=None
+#     )
+#
+#     class Meta:
+#         model = Question
+#         fields = [f.name for f in Question._meta.fields if f.editable and f.name != 'tag_id'] + ['tag']
+#
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         # Установить текущее значение по id
+#         if self.instance and self.instance.tag_id:
+#             try:
+#                 self.fields['tag'].initial = Tag.objects.using('chatbot').get(id=self.instance.tag_id)
+#             except Tag.DoesNotExist:
+#                 pass
+#
+#     def save(self, commit=True):
+#         # Сохранить выбранный тег в tag_id
+#         instance = super().save(commit=False)
+#         tag = self.cleaned_data.get('tag')
+#         instance.tag_id = tag.id if tag else None
+#         if commit:
+#             instance.save()
+#         return instance
 
 class BaseQuestionAdmin(admin.ModelAdmin):
-    list_display = ('text', 'category', 'is_published', 'created_by')
-    exclude = ('created_by',)
+    # form = QuestionAdminForm
+    model_admin_site = None # CustomAdminSite()
+    list_display = ('text', 'category', 'is_published', )
+    exclude = ('created_by', )
+    actions = ['reset_model']
+
+    # def tag_name(self, obj):
+    #     try:
+    #         tag = Tag.objects.using('chatbot').get(id=obj.tag_id)
+    #         return tag.name
+    #     except Tag.DoesNotExist:
+    #         return 'Неизвестный тег'
+    # tag_name.short_description = 'Тег'
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.filter(category__page=self.model_admin_site.page_id)
+        if self.model_admin_site:
+            return qs.filter(category__page=self.model_admin_site.page_id)
+        return qs
 
     def save_model(self, request, obj, form, change):
         if not obj.created_by_id:  # Если поле author еще не заполнено
             obj.created_by = request.user
         super().save_model(request, obj, form, change)
 
+    def reset_model(self, request, queryset):
+        """
+        Сбрасывает данные обучения бота, создаёт JSON файл и обучается.
+        """
+        bot = LibraryBotModel.get_instance()
+        try:
+            bot.reset_model()
+            self.message_user(request, "Модель успешно сброшена и переобучена из JSON")
+        except Exception as e:
+            self.message_user(request, f"Ошибка при сбросе и переобучении модели: {e}", level='error')
+
+    reset_model.short_description = "Обучить"
+
 
 class BaseFormQuestionAdmin(admin.ModelAdmin):
+    model_admin_site = None  # CustomAdminSite()
     list_display = ('full_name', 'email', 'date_created', 'page')
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.filter(page=self.model_admin_site.page_id)
+        if self.model_admin_site:
+            return qs.filter(category__page=self.model_admin_site.page_id)
+        return qs
 
 
 class BaseQuestionTopicNotificationAdmin(admin.ModelAdmin):
+    model_admin_site = None  # CustomAdminSite()
     list_display = ('topic', 'send_to_email', 'page')
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.filter(page=self.model_admin_site.page_id)
+        if self.model_admin_site:
+            return qs.filter(category__page=self.model_admin_site.page_id)
+        return qs
 
 # Создает, если не существует, группы пользователей и разрешения для доступа к админ панелям
 # Фабричная функция для создания AdminSite и регистрации моделей
 
+admin.site.register(Page)
+admin.site.register(Category, BaseCategoryAdmin)
+admin.site.register(Question, BaseQuestionAdmin)
+admin.site.register(FormQuestion, BaseFormQuestionAdmin)  # Используем BaseFormQuestionAdmin
+admin.site.register(QuestionTopicNotification, BaseQuestionTopicNotificationAdmin)

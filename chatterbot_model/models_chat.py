@@ -1,6 +1,11 @@
+import json
+import os
+
 from decouple import config
 from chatterbot import ChatBot
 from chatterbot.trainers import JsonFileTrainer, ListTrainer
+
+from bot.models import Question
 from chatterbot_model.models import ChatLog, TrainingPair, Statement, Tag, TagAssociation
 import logging
 
@@ -30,7 +35,75 @@ class CommonBotModel:
 
         print('✅ Модель чата запущена!')
 
-    def train_from_json(self, bot: ChatBot, directory: str):
+    @staticmethod
+    def generate_training_json(json_path: str = "./chatterbot_model/data/training_data.json"):
+        """
+        Формирует JSON-файл в формате ChatterBot на основе вопросов и обучающих пар.
+        """
+        try:
+            # Удаляем старый JSON-файл, если существует
+            if os.path.exists(json_path):
+                os.remove(json_path)
+                logging.info(f"🧹 Старый JSON-файл удалён: {json_path}")
+            conversation = []
+
+            # Вопросы из модели Question
+            questions = Question.objects.filter(is_published=True)
+            for q in questions:
+                category = q.category.name.strip()
+
+                # User сообщение
+                conversation.append({
+                    "text": q.text.strip(),
+                    "in_response_to": None,
+                    "persona": "user",
+                    "conversation": category,
+                    "tags": [category]
+                })
+
+                # Ответ бота
+                conversation.append({
+                    "text": q.answer.strip(),
+                    "in_response_to": q.text.strip(),
+                    "persona": "bot",
+                    "conversation": category,
+                    "tags": [category]
+                })
+
+            # Обучающие пары из TrainingPair
+            training_pairs = TrainingPair.objects.filter(is_applied=False)
+            for pair in training_pairs:
+                category = "Другие вопросы"
+
+                conversation.append({
+                    "text": pair.question.strip(),
+                    "in_response_to": None,
+                    "persona": "user",
+                    "conversation": category,
+                    "tags": [category]
+                })
+
+                conversation.append({
+                    "text": pair.answer.strip(),
+                    "in_response_to": pair.question.strip(),
+                    "persona": "bot",
+                    "conversation": category,
+                    "tags": [category]
+                })
+
+            # Запись в JSON
+            with open(json_path, 'w', encoding='utf-8') as f:
+                json.dump({"conversation": conversation}, f, ensure_ascii=False, indent=4)
+
+            logging.info(f"✅ Сформирован JSON-файл обучения: {json_path}")
+            return json_path
+
+        except Exception as e:
+            logging.error(f"❌ Ошибка при генерации JSON-файла: {e}")
+            raise
+
+    @staticmethod
+    def train_from_json(bot: ChatBot, directory: str):
         trainer = JsonFileTrainer(
             bot,
             field_map={
@@ -45,11 +118,16 @@ class CommonBotModel:
         print('✅ Обучение произошло успешно')
         logging.info('✅ Обучение произошло успешно')
 
-    def reset_model(self, json_directory: str):
+    def reset_model(self, json_directory: str = None):
         """
         Сбрасывает данные обучения бота и переобучает его из JSON-файла.
         """
         try:
+            if not json_directory:
+                print('обучение моедли--------')
+                json_directory = str(self.generate_training_json())
+                print(json_directory)
+
             # Создаём временный бот для сброса и переобучения
             training_bot = ChatBot(
                 'FAQBot',
@@ -77,6 +155,7 @@ class CommonBotModel:
 
             # Переобучаем бота из JSON
             self.train_from_json(training_bot, json_directory)
+            TrainingPair.objects.using('chatbot').update(is_applied=True)
             logging.info(f"Бот переобучен из JSON: {json_directory}")
 
             # Обновляем основной бот
@@ -89,6 +168,7 @@ class CommonBotModel:
             logging.info("Основной бот обновлён")
 
         except Exception as e:
+            print(e)
             logging.error(f"Ошибка при сбросе и переобучении модели: {e}")
             raise
 
