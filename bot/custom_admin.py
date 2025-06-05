@@ -5,6 +5,8 @@ from django.urls import path
 from bot.admin import CustomAdminSite, BaseCategoryAdmin, BaseQuestionAdmin, BaseFormQuestionAdmin, \
     BaseQuestionTopicNotificationAdmin
 from bot.models import Category, Question, FormQuestion, QuestionTopicNotification
+from chatterbot_model.admin import TagAdmin, TrainingPairAdmin
+from chatterbot_model.models import TrainingPair, Tag
 
 
 class CheckCreateAdminPage:
@@ -29,7 +31,7 @@ class CheckCreateAdminPage:
         groups_name = Group.objects.all().values_list('name', flat=True)
 
         if not f'admin_page_{page.slug}' in groups_name:
-            list_model = [Question, Category, FormQuestion, QuestionTopicNotification]
+            list_model = [Question, Category, FormQuestion, QuestionTopicNotification, TrainingPair, Tag]
             admin_group = Group.objects.create(name=f'admin_page_{page.slug}')
             content_type = ContentType.objects.get_for_model(User)
             perm_staff = Permission.objects.create(name=f'Can login admin page {page.name}',
@@ -78,6 +80,9 @@ class CheckCreateAdminPage:
         custom_admin.register(Question, QuestionAdmin)
         custom_admin.register(FormQuestion, FormQuestionAdmin)
         custom_admin.register(QuestionTopicNotification, QuestionTopicNotificationAdmin)
+        # Не имеет привязанности к определенной странице
+        custom_admin.register(Tag, TagAdmin)
+        custom_admin.register(TrainingPair, TrainingPairAdmin)
 
         return custom_admin
 

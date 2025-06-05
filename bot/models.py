@@ -69,7 +69,7 @@ class Question(models.Model):
 
 
 class QuestionTopicNotification(models.Model):
-    topic = models.CharField(max_length=55, verbose_name="Тема обращения", null=False)
+    topic = models.CharField(max_length=55, verbose_name="Темы обращений", null=False)
     send_to_email = ArrayField(
         models.EmailField(max_length=100, verbose_name="Почта для уведомлений"),
         size=8
@@ -79,7 +79,7 @@ class QuestionTopicNotification(models.Model):
 
     class Meta:
         verbose_name = 'Тема обращения'
-        verbose_name_plural = 'Темы обращения'
+        verbose_name_plural = 'Темы обращений'
 
     def __str__(self):
         return self.topic
