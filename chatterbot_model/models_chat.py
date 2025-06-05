@@ -8,6 +8,7 @@ from chatterbot.trainers import JsonFileTrainer, ListTrainer
 from bot.models import Question
 from chatterbot_model.models import ChatLog, TrainingPair, Statement, Tag, TagAssociation
 import logging
+from bs4 import BeautifulSoup
 
 logging.basicConfig(filename='chatterbot.log', level=logging.INFO, format='%(asctime)s - %(message)s', encoding="utf-8")
 
@@ -51,10 +52,12 @@ class CommonBotModel:
             questions = Question.objects.filter(is_published=True)
             for q in questions:
                 category = q.category.name.strip()
+                clean_q = BeautifulSoup(q.text, features="lxml").text.strip()
+                clean_a = BeautifulSoup(q.answer, features="lxml").text.strip()
 
                 # User сообщение
                 conversation.append({
-                    "text": q.text.strip(),
+                    "text": clean_q,
                     "in_response_to": None,
                     "persona": "user",
                     "conversation": category,
@@ -63,8 +66,8 @@ class CommonBotModel:
 
                 # Ответ бота
                 conversation.append({
-                    "text": q.answer.strip(),
-                    "in_response_to": q.text.strip(),
+                    "text": clean_a,
+                    "in_response_to": clean_q,
                     "persona": "bot",
                     "conversation": category,
                     "tags": [category]

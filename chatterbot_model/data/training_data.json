@@ -10,7 +10,7 @@
             ]
         },
         {
-            "text": "<p><strong>Жирный текст</strong></p>\r\n\r\n<p><em>Курсив</em></p>\r\n\r\n<p><a href=\"https://vk.com\"><u>Подчеркивание</u></a></p>\r\n\r\n<p><u>номерер</u></p>",
+            "text": "Жирный текст\nКурсив\nПодчеркивание\nномерер",
             "in_response_to": "Вопрос с форматирматированием",
             "persona": "bot",
             "conversation": "График работы",
@@ -28,30 +28,12 @@
             ]
         },
         {
-            "text": "<p>с 8.00 до 10.00</p>",
+            "text": "с 8.00 до 10.00",
             "in_response_to": "Какой график работы? сс",
             "persona": "bot",
             "conversation": "График работы",
             "tags": [
                 "График работы"
-            ]
-        },
-        {
-            "text": "Какая погода?",
-            "in_response_to": null,
-            "persona": "user",
-            "conversation": "Другие вопросы",
-            "tags": [
-                "Другие вопросы"
-            ]
-        },
-        {
-            "text": "у нас сегодня пасмурно",
-            "in_response_to": "Какая погода?",
-            "persona": "bot",
-            "conversation": "Другие вопросы",
-            "tags": [
-                "Другие вопросы"
             ]
         }
     ]
