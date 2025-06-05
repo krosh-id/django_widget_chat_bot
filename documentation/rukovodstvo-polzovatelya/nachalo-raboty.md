@@ -21,4 +21,4 @@
 Первое что необходимо узнать это ваш  url (ссылку)  для страницы администратора виджета. \
 Далее запросить логин и пароль, так как только _ведущий администратор_ может создать пользователя.
 
-<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption><p>Страница входа</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption><p>Страница входа</p></figcaption></figure>

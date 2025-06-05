@@ -11,6 +11,11 @@
 * [Обращения](rukovodstvo-polzovatelya/obrasheniya.md)
 * [Темы обращений](rukovodstvo-polzovatelya/temy-obrashenii.md)
 
+***
+
+* [Обучающие пары](obuchayushie-pary.md)
+* [Теги](tegi.md)
+
 ## Руководство разроботчика
 
 * [Быстрый старт](rukovodstvo-razrobotchika/bystryi-start.md)

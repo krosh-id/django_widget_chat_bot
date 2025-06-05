@@ -26,4 +26,4 @@ description: '#Интерфейс'
 
 Система устроена интуитивно понятно для удобства пользователей.&#x20;
 
-<mark style="background-color:orange;">Если у вас остались вопросы, вы можете связаться со мной напрямую по эл. почте: invite4googl@gmail.com</mark>
+<mark style="background-color:orange;">Если у вас остались вопросы, вы можете связаться со мной напрямую по эл. почте: invitemail@mail.ru</mark>

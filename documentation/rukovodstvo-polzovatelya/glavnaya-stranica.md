@@ -6,7 +6,7 @@ description: '#Интерфейс'
 
 После успешного входа в учётную запись вы окажетесь на главной странице администратора виджета.
 
-<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption><p>Главная страницы</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1).png" alt=""><figcaption><p>Главная страницы</p></figcaption></figure>
 
 Здесь вы можете увидеть 4 стандартных раздела:
 
