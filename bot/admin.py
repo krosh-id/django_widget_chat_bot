@@ -57,6 +57,7 @@ class BaseCategoryAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if not obj.created_by_id:  # Если поле author еще не заполнено
             obj.created_by = request.user
+            obj.page_id = self.model_admin_site.page_id
         super().save_model(request, obj, form, change)
 
 # Выбор тегов для вопросов на основе tag_id
@@ -156,7 +157,7 @@ class BaseQuestionTopicNotificationAdmin(admin.ModelAdmin):
 # Фабричная функция для создания AdminSite и регистрации моделей
 
 admin.site.register(Page)
-admin.site.register(Category, BaseCategoryAdmin)
+admin.site.register(Category)
 admin.site.register(Question, BaseQuestionAdmin)
 admin.site.register(FormQuestion, BaseFormQuestionAdmin)  # Используем BaseFormQuestionAdmin
 admin.site.register(QuestionTopicNotification, BaseQuestionTopicNotificationAdmin)
