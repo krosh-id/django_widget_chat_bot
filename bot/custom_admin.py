@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group, Permission, User
 from django.urls import path
 from bot.admin import CustomAdminSite, BaseCategoryAdmin, BaseQuestionAdmin, BaseFormQuestionAdmin, \
     BaseQuestionTopicNotificationAdmin
-from bot.models import Category, Question, FormQuestion, QuestionTopicNotification
+from bot.models import Category, Question, FormQuestion, QuestionTopicNotification, Institution
 from chatterbot_model.admin import TagAdmin, TrainingPairAdmin
 from chatterbot_model.models import TrainingPair, Tag
 
@@ -81,6 +81,7 @@ class CheckCreateAdminPage:
         custom_admin.register(FormQuestion, FormQuestionAdmin)
         custom_admin.register(QuestionTopicNotification, QuestionTopicNotificationAdmin)
         # Не имеет привязанности к определенной странице
+        custom_admin.register(Institution)
         custom_admin.register(Tag, TagAdmin)
         custom_admin.register(TrainingPair, TrainingPairAdmin)
 

@@ -115,9 +115,9 @@ DATABASES = {
 
 CACHES = {
     "default": {
-        #"BACKEND": "django.core.cache.backends.dummy.DummyCache",
-        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-        "LOCATION": "cache_table_bot",
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        # "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        # "LOCATION": "cache_table_bot",
     },
 }
 

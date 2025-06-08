@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.shortcuts import redirect
 from chatterbot_model.models_chat import LibraryBotModel
-from .models import Page, Category, Question, FormQuestion, QuestionTopicNotification
+from .models import Page, Category, Question, FormQuestion, QuestionTopicNotification, Institution
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -134,7 +134,7 @@ class BaseQuestionAdmin(admin.ModelAdmin):
 
 class BaseFormQuestionAdmin(admin.ModelAdmin):
     model_admin_site = None  # CustomAdminSite()
-    list_display = ('full_name', 'email', 'date_created', 'page')
+    list_display = ('full_name', 'email', 'date_created', 'institution')
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -145,7 +145,7 @@ class BaseFormQuestionAdmin(admin.ModelAdmin):
 
 class BaseQuestionTopicNotificationAdmin(admin.ModelAdmin):
     model_admin_site = None  # CustomAdminSite()
-    list_display = ('topic', 'send_to_email', 'page')
+    list_display = ('topic', 'send_to_email', 'institution')
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -158,6 +158,7 @@ class BaseQuestionTopicNotificationAdmin(admin.ModelAdmin):
 
 admin.site.register(Page)
 admin.site.register(Category)
+admin.site.register(Institution)
 admin.site.register(Question, BaseQuestionAdmin)
 admin.site.register(FormQuestion, BaseFormQuestionAdmin)  # Используем BaseFormQuestionAdmin
 admin.site.register(QuestionTopicNotification, BaseQuestionTopicNotificationAdmin)

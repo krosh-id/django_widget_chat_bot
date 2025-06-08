@@ -17,6 +17,17 @@ class Page(models.Model):
         return self.name
 
 
+class Institution(models.Model):
+    name = models.CharField(max_length=255, null=False, blank=True, verbose_name='Институт')
+
+    class Meta:
+        verbose_name = 'Институт'
+        verbose_name_plural = 'Институты'
+
+    def __str__(self):
+        return self.name
+
+
 class Category(models.Model):
     name = models.CharField(max_length=255, null=False, verbose_name="Название категории")
     created_by = models.ForeignKey(get_user_model(),
@@ -69,13 +80,21 @@ class Question(models.Model):
 
 
 class QuestionTopicNotification(models.Model):
-    topic = models.CharField(max_length=55, verbose_name="Темы обращений", null=False)
+    topic = models.CharField(max_length=55, null=False, verbose_name="Темы обращений", )
     send_to_email = ArrayField(
         models.EmailField(max_length=100, verbose_name="Почта для уведомлений"),
-        size=8
+        size=8,
+        verbose_name="Почта для уведомлений",
     )
     page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='question_topics',
                              verbose_name="Отношение к странице")
+    institution = models.ForeignKey(Institution,
+                                    on_delete=models.CASCADE,
+                                    related_name='question_topics',
+                                    verbose_name="Институт",
+                                    null=True,
+                                    blank=True,
+                                    )
 
     class Meta:
         verbose_name = 'Тема обращения'
@@ -94,10 +113,16 @@ class FormQuestion(models.Model):
     page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='form_questions',
                              verbose_name="Отношение к странице")
     topic_question = models.ForeignKey(QuestionTopicNotification,
-                                       related_name='question_topic_notifications',
+                                       related_name='form_questions',
                                        on_delete=models.CASCADE,
                                        verbose_name="Тема обращения",
                                        )
+    institution = models.ForeignKey(Institution,
+                                    on_delete=models.CASCADE,
+                                    related_name='form_questions',
+                                    verbose_name="Институт",
+                                    null=False,
+                                    )
 
     class Meta:
         verbose_name = 'Обращение'

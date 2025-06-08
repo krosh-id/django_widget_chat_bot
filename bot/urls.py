@@ -11,6 +11,7 @@ extra_lib_patterns = [
     path('form/', LibPageAPI.as_view({'post': 'create'})),
     path('predict_answer/', LibPageAPI.as_view({'post': 'get_response'})),
     path('get_question_topic/', LibPageAPI.as_view({'get': 'get_question_topic'})),
+    path('get_institutions/', LibPageAPI.as_view({'get': 'get_institutions'})),
 ]
 
 # основной патерн включающие другие патерны страниц
