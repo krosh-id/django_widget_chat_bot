@@ -1,4 +1,3 @@
-# import bleach
 from rest_framework import serializers
 from bot.models import Page, Category, Question, FormQuestion, QuestionTopicNotification, Institution
 
@@ -13,11 +12,6 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ['id', 'text', 'answer']
-
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #     representation['answer'] = bleach.clean(representation['answer'])
-    #     return representation
 
 
 class QuestionTopicNotificationSerializer(serializers.ModelSerializer):

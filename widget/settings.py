@@ -248,7 +248,11 @@ JAZZMIN_SETTINGS = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+
     'formatters': {
+        'chatterbot_formatter': {
+            'format': '%(asctime)s - %(message)s',
+        },
         'verbose': {
             'format': '[{asctime}] {levelname} {name} {module} {message}',
             'style': '{',
@@ -260,12 +264,25 @@ LOGGING = {
             'style': '{',
         },
     },
+
     'handlers': {
+        'chatterbot_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': 'chatterbot.log',
+            'when': 'D',
+            'backupCount': 7,
+            'formatter': 'chatterbot_formatter',
+            'encoding': 'utf-8',
+        },
         'file': {
             'level': 'WARNING',
-            'class': 'logging.FileHandler',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': './widget/bot.log',
+            'when': 'D',
+            'backupCount': 7,
             'formatter': 'verbose',
+            'encoding': 'utf8',
         },
         'console': {
             'level': 'INFO',
@@ -282,15 +299,17 @@ LOGGING = {
             'formatter': 'django.server',
         },
     },
+
+    # Логгеры
     'loggers': {
         'django': {
             'handlers': ['file', 'console', 'mail_admins'],
-            'level': 'INFO',  # INFO для django, чтобы не перегружать лог
+            'level': 'INFO',
             'propagate': False,
         },
         'django.request': {
             'handlers': ['file', 'console', 'mail_admins'],
-            'level': 'ERROR',  # Логировать ошибки 4xx и 5xx
+            'level': 'ERROR',
             'propagate': False,
         },
         'django.db.backends': {
@@ -298,10 +317,20 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'bot': {  # Логгер для приложения bot
+        'bot': {
             'handlers': ['file', 'console'],
             'level': 'WARNING',
             'propagate': False,
         },
+        'chatterbot': {
+            'handlers': ['chatterbot_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+
+    'root': {
+        'handlers': ['chatterbot_file'],
+        'level': 'INFO',
     },
 }

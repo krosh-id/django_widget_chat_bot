@@ -10,7 +10,7 @@ from chatterbot_model.models import ChatLog, TrainingPair, Statement, Tag, TagAs
 import logging
 from bs4 import BeautifulSoup
 
-logging.basicConfig(filename='chatterbot.log', level=logging.INFO, format='%(asctime)s - %(message)s', encoding="utf-8")
+logger = logging.getLogger('chatterbot')
 
 # Предопределённая фраза и порог уверенности
 DEFAULT_RESPONSE = ("Я не chatgpt и могу отвечать только на определенные вопросы 😊. "
