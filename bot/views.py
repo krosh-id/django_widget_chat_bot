@@ -46,14 +46,16 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
         return msg
 
     @staticmethod
-    def send_notifications_by_email(data: dict, page_url: str):
+    def send_notifications_by_email(data: dict, page_url: str, institution_name: str):
         try:
             notification = QuestionTopicNotification.objects.get(pk=data['topic_question'])
             for email in notification.send_to_email:
                 send_mail(
                     f"Новый вопрос по теме {notification.topic}",
                     f"""
-                                    Появился новый вопрос на странице {page_url}.
+                                    Появился новый вопрос в {page_url}.
+                                    Институт: {institution_name} 
+                                    
                                     Содержание вопроса:
                                         "{data['text']}"
                                     От: {data['full_name']} {data['email']}
@@ -72,7 +74,7 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
 
     # 2 отдельных SQL запроса на категории и вопросы
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
-    @method_decorator(cache_page(60 * 60, key_prefix='category_questions_{}'.format(page_id)))
+    @method_decorator(cache_page(60 * 10, key_prefix='category_questions_{}'.format(page_id)))
     def retrieve(self, request):
         queryset = Category.objects.filter(page_id=self.page_id).prefetch_related('questions').all()
         serializer = CategorySerializer(queryset, many=True)
@@ -86,7 +88,10 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
 
             if serializer.is_valid():
                 serializer.save()
-                self.send_notifications_by_email(serializer.data, self.page_url)
+                self.send_notifications_by_email(serializer.data,
+                                                 self.page_url,
+                                                 serializer.validated_data['institution'].name
+                                                 )
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
@@ -119,14 +124,14 @@ class BaseCategoryQuestionAPIListCreate(viewsets.ViewSet):
         return Response({'answer': res})
 
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
-    @method_decorator(cache_page(60 * 60, key_prefix='category_questions_{}'.format(page_id)))
+    @method_decorator(cache_page(60 * 10, key_prefix='category_questions_{}'.format(page_id)))
     def get_question_topic(self, request):
         queryset = QuestionTopicNotification.objects.filter(page_id=self.page_id).distinct('topic')
         serializer = QuestionTopicNotificationSerializer(queryset, many=True)
         return Response(serializer.data)
 
     @method_decorator(ratelimit(key='user_or_ip', rate='10/m'))
-    @method_decorator(cache_page(60 * 60, key_prefix='institutions_{}'.format(page_id)))
+    @method_decorator(cache_page(60 * 10, key_prefix='institutions_{}'.format(page_id)))
     def get_institutions(self, request):
         queryset = Institution.objects.all()
         serializer = InstitutionSerializer(queryset, many=True)
